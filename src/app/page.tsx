@@ -1,0 +1,347 @@
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import Pinouts from "./Pinouts";
+import yaml from "js-yaml";
+
+
+export default function Home() {
+
+
+  const [tableData1, setTableData1] = useState([
+    { left: "P1.01", lefsubClass: "bg-[#FE5555] text-white", leftSub: ["VIN_5V"], row: ["01", "02"], right: "P1.02", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO1_10"], },
+    { left: "P1.03", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_51"], row: ["03", "04"], right: "P1.04", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO1_12"], },
+    { left: "P1.05", lefsubClass: "bg-[#FE5555] text-white", leftSub: ["USB1_VBUS"], row: ["05", "06"], right: "P1.06", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO1_13"], },
+    { left: "P1.07", lefsubClass: "bg-[#FE5555] text-white", leftSub: ["VIN_USB"], row: ["07", "08"], right: "P1.08", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO1_14"], },
+    { left: "P1.09", lefsubClass: "bg-[#416EB1] text-white", leftSub: ["USB1_DN"], row: ["09", 10], right: "P1.10", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO1_30"], },
+    { left: "P1.11", lefsubClass: "bg-[#416EB1] text-white", leftSub: ["USB1_DP"], row: [11, 12], right: "P1.12", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO1_8"], },
+    { left: "P1.13", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO0_36"], row: [13, 14], right: "P1.14", rightsubClass: "bg-[#FE5555] text-white", rightSub: ["VDD_3V3"], },
+    { left: "P1.15", lefsubClass: "bg-[#191919] text-white", leftSub: ["GND"], row: [15, 16], right: "P1.16", rightsubClass: "bg-[#191919] text-white", rightSub: ["GND"], },
+    { left: "P1.17", lefsubClass1: "bg-[#191919] text-white", lefsubClass: "bg-[#5ED28D] text-black", leftSub: ["AIN_REFN"], row: [17, 18], right: "P1.18", rightsubClass: "bg-[#5ED28D] text-black", rightSub: ["AIN_REFP"] },
+    { left: "P1.19", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_1"], row: [19, 20], right: "P1.20", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI00_50"], },
+    { left: "P1.21", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_6"], row: [21, 22], right: "P1.22", rightsubClass: "bg-[#191919] text-white", rightSub: ["GND"], },
+    { left: "P1.23", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_5"], row: [23, 24], right: "P1.24", rightsubClass: "bg-[#FE5555] text-white", rightSub: ["VOUT"], },
+    { left: "P1.25", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_4"], row: [25, 26], right: "P1.26", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_44"], },
+    { left: "P1.27", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_3"], row: [27, 28], right: "P1.28", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_43"], },
+    { left: "P1.29", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_62"], row: [29, 30], right: "P1.30", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI01_21"], },
+    { left: "P1.31", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_59"], row: [31, 32], right: "P1.32", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI01_20"], },
+    { left: "P1.33", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_29"], row: [33, 34], right: "P1.34", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI01_2"], },
+    { left: "P1.35", lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO0_88"], row: [35, 36], right: "P1.36", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI00_55"], },
+  ]);
+  const [tableData2, setTableData2] = useState([
+    { left: "P2.01", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_86"], row: ["01", "02"], right: "P2.02", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_45"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.03", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_85"], row: ["03", "04"], right: "P2.04", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_46"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.05", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["MCU_GPIO0_5"], row: ["05", "06"], right: "P2.06", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_47"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.07", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["MCU_GPIO0_6"], row: ["07", "08"], right: "P2.08", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_48"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.09", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["MCU_GPIO0_16"], row: ["09", 10], right: "P2.10", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_91"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.11", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["MCU_GPIO0_15"], row: [11, 12], right: "P2.12", rightsubClass: "bg-[#51726B] text-white", rightSub: ["PWR_BTN"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.13", lefsubClass: "bg-[#DB3838] text-white", leftSub1: [], leftSub: ["VOUT_VSYS"], row: [13, 14], right: "P2.14", rightsubClass: "bg-[#FE5555] text-white", rightSub: ["VBAT"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.15", lefsubClass: "bg-[#191919] text-white", leftSub1: [], leftSub: ["GND"], row: [15, 16], right: "P2.16", rightsubClass: "bg-[#5ED28D] text-black", rightSub: ["BAT_TEMP"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.17", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_64"], row: [17, 18], right: "P2.18", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_53"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.19", lefsubClass1: "bg-[] text-black", leftSub1: [], lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_0"], row: [19, 20], right: "P2.20", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_49"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.21", lefsubClass1: "bg-[] text-black", leftSub1: [], lefsubClass: "bg-[#191919] text-white", leftSub: ["GND"], row: [21, 22], right: "P2.22", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI00_63"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.23", lefsubClass1: "bg-[] text-black", leftSub1: [], lefsubClass: "bg-[#DB3838] text-white", leftSub: ["VDD_3V3"], row: [23, 24], right: "P2.24", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_51"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.25", lefsubClass1: "bg-[] text-black", leftSub1: [], lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_19"], row: [25, 26], right: "P2.26", rightsubClass: "bg-[#B1426E] text-white", rightSub: ["nRESET"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.27", lefsubClass1: "bg-[] text-black", leftSub1: [], lefsubClass: "bg-[#E9BB34] text-black", leftSub: ["GPIO1_18"], row: [27, 28], right: "P2.28", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_61"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.29", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_40"], row: [29, 30], right: "P2.30", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_58"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.31", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_90"], row: [31, 32], right: "P2.32", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI00_57"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.33", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_52"], row: [33, 34], right: "P2.34", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_60"], rightSub1: [], rightsub1Class: "" },
+    { left: "P2.35", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: ["PA20", "ADC_CH5"], leftSub: ["GPIO0_54"], row: [35, 36], right: "P2.36", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI01_16"], rightSub1: ["ADC_CH7", "PA15"], rightsub1Class: "bg-[#5ED28D] text-black" },
+  ]);
+
+  const [pins, setPins] = useState<Record<string, any>>({});
+  const [selectedPin, setSelectedPin] = useState<string>("");
+  const [pinDetails, setPinDetails] = useState<Record<string, any> | null>(
+    null
+  );
+
+
+  const updatePinSub1 = (pin: string, newValue: string) => {
+    const port = pin.split(".")[0]; // "P2"
+    if (port == "P1") {
+
+      setTableData1((prevData) =>
+        prevData.map((row) => {
+          const pinNumber = parseInt(pin.replace("P1.", ""), 10);
+
+          if (!isNaN(pinNumber)) {
+            if (pinNumber % 2 !== 0 && row.left === pin) {
+              return { ...row, leftSub: [newValue] };
+            } else if (pinNumber % 2 === 0 && row.right === pin) {
+              return { ...row, rightSub: [newValue] };
+            }
+          }
+          return row;
+        })
+      );
+    }
+    else if (port == "P2") {
+      setTableData2((prevData) =>
+        prevData.map((row) => {
+          const pinNumber = parseInt(pin.replace("P2.", ""), 10);
+
+          if (!isNaN(pinNumber)) {
+            if (pinNumber % 2 !== 0 && row.left === pin) {
+              return { ...row, leftSub: [newValue] };
+            } else if (pinNumber % 2 === 0 && row.right === pin) {
+              return { ...row, rightSub: [newValue] };
+            }
+          }
+          return row;
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    const fetchPins = async () => {
+      try {
+        // Fetch both YAML files
+        const [response1, response2] = await Promise.all([
+          fetch("./P1.yaml"),
+          fetch("./P2.yaml"),
+        ]);
+
+        // Convert responses to text
+        const [text1, text2] = await Promise.all([
+          response1.text(),
+          response2.text(),
+        ]);
+
+        // Parse YAML files
+        const data1 = yaml.load(text1) as Record<string, any>;
+        const data2 = yaml.load(text2) as Record<string, any>;
+
+        // Merge pin data from both files
+        const mergedPins = { ...data1.pins, ...data2.pins };
+        setPins(mergedPins); // Store merged pins
+
+      } catch (error) {
+        console.error("Failed to fetch pin data:", error);
+      }
+    };
+
+    fetchPins();
+  }, []);
+
+  const handlePinClick = (pin: string) => {
+    if (pins[pin]) {
+      setSelectedPin(pin);
+      setPinDetails(pins[pin]);
+    } else {
+      console.warn(`Pin ${pin} not found.`);
+    }
+  };
+
+  const getPinModes = (pinName: string, signalName: string) => {
+    return pins[pinName]?.[signalName] || {}; // Return the mode object directly
+  };
+
+  // Example Usage
+  const pinModes = getPinModes("P1.02", "GPIO1_10");
+  console.log(selectedPin, pins[selectedPin])
+  if (pins[selectedPin]) {
+    const firstSignal = Object.keys(pins[selectedPin])[0]; // Get first available signal
+    console.log(getPinModes(selectedPin, firstSignal)[`mode0`]); // Now it won't break
+  } else {
+    console.log("Pins data not yet available or selectedPin is invalid");
+  }
+
+  return (
+    <div className="flex flex-col lg:h-screen m-0 p-0 ">
+      <div>
+        <div className="top-0 md:left-0 md:right-0 border-b flex backdrop-blur-sm justify-center py-[10px]  items-center font-bold z-50">
+          <div className="flex w-full max-w-screen mx-2 md:mx-4 justify-between items-center">
+            <div className="flex flex-row gap-2 items-center group">
+              <Link href="/">
+                <div className="font-rancho font-bold text-2xl duration-300 pl-2 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text ">
+                  Pinouts
+                </div>
+              </Link>
+            </div>
+            <div className="flex gap-0 md:gap-2 items-center">
+              <Link
+                href="https://github.com/beagleboard/pinouts"
+                target="__blank"
+              >
+                <GitHubLogoIcon width={24} height={24} className="text-black" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <main className=" flex flex-col flex-[1_1_0%] min-h-80 bg-highlight  rounded-2xl m-4 relative"
+      >
+        <div className="flex flex-col flex-[1_1_0%] lg:flex-row items-center justify-center  h-full min-h-[40vh] w-full lg:gap-4 xl:gap-8">
+          {/* Tables Section */}
+          <div className="flex flex-col lg:flex-row items-center justify-center flex-1 gap-8 w-full">
+            {[tableData1, tableData2].map((tableData, tableIndex) => (
+              <div key={tableIndex} className="flex flex-col items-center w-full sm:w-xs max-w-xs sm:max-w-sm mr-1">
+                <h2 className={`text-base sm:text-base md:text-md font-bold mb-2 text-black ${tableIndex === 0 ? "ml-8" : "ml-12"}`}>
+                  {tableIndex === 0 ? "P1" : "P2"}
+                </h2>
+                <div className="flex justify-center w-full">
+                  <table className="border-collapse border-0 lg:h-[60vh] lg:w-[20vh] xl:w-[40vh] lg:text-[12px]  xl:font-normal  2xl:text-sm">
+                    <tbody>
+                      {tableData.map((data, index) => (
+                        <tr key={index}>
+                          <td className="relative text-right px-2">
+                            <div className="inline-flex items-center">
+                              {data.leftSub.map((sub, idx) => (
+                                <span
+                                  key={idx}
+                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${data.lefsubClass}`}
+                                >
+                                  <span className="inline-block transform skew-x-12">{sub}</span>
+                                </span>
+                              ))}
+                              <span
+                                className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer rounded-md bg-[#cc0077]"
+                                onClick={() => handlePinClick(data.left)}
+                              >
+                                <span className="inline-block transform skew-x-12">{data.left}</span>
+                              </span>
+                            </div>
+                          </td>
+                          <td className="text-center justify-center px-2">
+                            <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
+                              {data.row[0]}
+                            </span>
+                          </td>
+                          <td className="text-center circular pr-2">
+                            <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
+                              {data.row[1]}
+                            </span>
+                          </td>
+                          <td className="text-left">
+                            <div className="inline-flex items-center">
+                              <span
+                                className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 rounded-md bg-[#cc0077]"
+                                onClick={() => handlePinClick(data.right)}
+                              >
+                                <span className="inline-block transform skew-x-12">{data.right}</span>
+                              </span>
+                              {data.rightSub.map((sub, idx) => (
+                                <span
+                                  key={idx}
+                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${data.rightsubClass}`}
+                                >
+                                  <span className="inline-block transform skew-x-12">{sub}</span>
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col flex-[1_1_0%] min-h-60 bg-gray-100 rounded-lg mt-[4vh] shadow-md rounded-2xl m-4 relative p-4">
+            <h2 className="text-xl text-black font-bold mb-4">{selectedPin}</h2>
+            <div className="text-black overflow-x-auto">
+              {pinDetails ? (
+                <div className="mb-4">
+                  <table className="w-full border-collapse border border-gray-300 table-fixed">
+                    {/* Table Header */}
+                    <thead>
+                      <tr className="bg-gray-200">
+                        <th className="border border-gray-300 px-2 py-2 text-sm">Mode</th>
+                        {Object.keys(pinDetails).map((pin) => (
+                          <th
+                            key={pin}
+                            className="border border-gray-300 px-2 py-2 text-sm truncate whitespace-nowrap"
+                          >
+                            {pin}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+
+                    {/* Table Body */}
+                    <tbody>
+                      {[...Array(9).keys()].map((modeIndex) => (
+                        <tr key={modeIndex} className="text-center">
+                          <td className="border border-gray-300 px-2 py-2 font-bold xl:text-[12px] 2xl:text-sm whitespace-nowrap">
+                            Mode{modeIndex}
+                          </td>
+                          {Object.keys(pinDetails).map((pin, i) => {
+                            let modeValue = "";
+                            if (pins[selectedPin]) {
+                              const firstSignal = Object.keys(pins[selectedPin])[i];
+                              modeValue = getPinModes(selectedPin, firstSignal)[`mode${modeIndex}`] || "";
+                            }
+
+                            return (
+                              <td
+                                key={`${pin}-mode${modeIndex}`}
+                                className="border border-gray-300 px-2 py-2 text-xs whitespace-nowrap overflow-hidden xl:text-[8px] 2xl:text-sm text-ellipsis"
+                              >
+                                <pre className="truncate">{modeValue.trim() ? modeValue : "~"}</pre>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+
+
+                    {/* Functionality Buttons at Bottom */}
+                    <tfoot>
+                      <tr className="bg-gray-100">
+                        <td className="border border-gray-300 px-2 py-2 font-bold text-center text-sm">
+                          Actions
+                        </td>
+                        {Object.keys(pinDetails).map((pin) => (
+                          <td key={`action-${pin}`} className="border border-gray-300 px-2 py-2">
+                            <button
+                              className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full text-xs"
+                              onClick={() => updatePinSub1(selectedPin, pin)}
+                            >
+                              Select {pin}
+                            </button>
+                          </td>
+                        ))}
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              ) : (
+              <div>         
+                  <strong> BeagleBoard.org Pinouts </strong>
+                  <p>An interactive BeagleBoard.org single board computers cape header pins information portal.</p>
+                  <p>Action: Click on PX.Y of your choice to see it's information here!</p>
+              </div>
+
+            )}
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+
+
+      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-2 border-t md:px-4 ">
+
+        <p className="text-sm text-muted-foreground text-black ">
+          <Link href="https://docs.beagleboard.org/" target="_blank">
+            <Pinouts /> | &copy; {new Date().getFullYear()} BeagleBoard.org Foundation.</Link>
+        </p>
+        <nav className="sm:ml-auto text-black flex gap-4 sm:gap-6">
+          <Link className="text-sm hover:underline underline-offset-4" target="_blank" href="https://docs.beagleboard.org/">
+            Docs
+          </Link>
+          <Link className="text-sm hover:underline underline-offset-4" href="https://www.beagleboard.org/" target="_blank">
+            Site
+          </Link>
+        </nav>
+      </footer>
+    </div>
+
+  );
+}
