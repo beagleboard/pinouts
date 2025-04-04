@@ -197,7 +197,7 @@ export default function Home() {
                                 </span>
                               ))}
                               <span
-                                className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer rounded-md bg-[#cc0077]"
+                                className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer text-white rounded-md bg-[#cc0077]"
                                 onClick={() => handlePinClick(data.left)}
                               >
                                 <span className="inline-block transform skew-x-12">{data.left}</span>
@@ -217,7 +217,7 @@ export default function Home() {
                           <td className="text-left">
                             <div className="inline-flex items-center">
                               <span
-                                className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 rounded-md bg-[#cc0077]"
+                                className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 text-white rounded-md bg-[#cc0077]"
                                 onClick={() => handlePinClick(data.right)}
                               >
                                 <span className="inline-block transform skew-x-12">{data.right}</span>
