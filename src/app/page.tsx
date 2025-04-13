@@ -129,6 +129,7 @@ export default function Home() {
     if (pins[pin]) {
       setSelectedPin(pin);
       setPinDetails(pins[pin]);
+      setActiveSub("");
     } else {
       console.warn(`Pin ${pin} not found.`);
     }
@@ -137,6 +138,7 @@ export default function Home() {
   const getPinModes = (pinName: string, signalName: string) => {
     return pins[pinName]?.[signalName] || {}; // Return the mode object directly
   };
+  const [activeSub, setActiveSub] = useState<string | null>("");
 
   // Example Usage
   const pinModes = getPinModes("P1.02", "GPIO1_10");
@@ -186,7 +188,10 @@ export default function Home() {
                     <tbody>
                       {tableData.map((data, index) => (
                         <tr key={index}>
-                          <td className="relative text-right px-2">
+                          <td
+                            className={`relative text-right px-2 ${data.leftSub.includes(activeSub ?? '') ? 'bg-green-400' : ''
+                              }`}
+                          >
                             <div className="inline-flex items-center">
                               {data.leftSub.map((sub, idx) => (
                                 <span
@@ -200,21 +205,25 @@ export default function Home() {
                                 className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer text-white rounded-md bg-[#cc0077]"
                                 onClick={() => handlePinClick(data.left)}
                               >
-                                <span className="inline-block transform skew-x-12">{data.left}</span>
+                                <span className="inline-block text-white transform skew-x-12">{data.left}</span>
                               </span>
                             </div>
                           </td>
+
                           <td className="text-center justify-center px-2">
                             <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
                               {data.row[0]}
                             </span>
                           </td>
-                          <td className="text-center circular pr-2">
+                          <td className="text-center justify-center px-2">
                             <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
                               {data.row[1]}
                             </span>
                           </td>
-                          <td className="text-left">
+                          <td
+                            className={`text-left ${data.rightSub.includes(activeSub||'') ? 'bg-green-400' : ''
+                              }`}
+                          >
                             <div className="inline-flex items-center">
                               <span
                                 className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 text-white rounded-md bg-[#cc0077]"
@@ -232,6 +241,7 @@ export default function Home() {
                               ))}
                             </div>
                           </td>
+
                         </tr>
                       ))}
                     </tbody>
@@ -242,6 +252,23 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col flex-[1_1_0%] min-h-60 bg-gray-100 rounded-lg mt-[4vh] shadow-md rounded-2xl m-4 relative p-4">
+            <div className="flex justify-between items-center gap-2 mb-4">
+              <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+              onClick={ ()=>{   setActiveSub("GND");}
+              }
+              >Ground</button>
+              <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                onClick={ ()=>{   setActiveSub("GND");}
+              }>Button 2</button>
+              <button className="px-3 py-1 bg-yellow-500 text-white text-sm rounded hover:bg-yellow-600"
+                onClick={ ()=>{   setActiveSub("GND");}
+              }>Button 3</button>
+              <button className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
+                onClick={ ()=>{   setActiveSub("GND");}
+              }
+             >Button 4</button>
+              <button className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">Button 5</button>
+            </div>
             <h2 className="text-xl text-black font-bold mb-4">{selectedPin}</h2>
             <div className="text-black overflow-x-auto">
               {pinDetails ? (
@@ -300,7 +327,8 @@ export default function Home() {
                           <td key={`action-${pin}`} className="border border-gray-300 px-2 py-2">
                             <button
                               className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full text-xs"
-                              onClick={() => updatePinSub1(selectedPin, pin)}
+                              onClick={() => {updatePinSub1(selectedPin, pin);       setActiveSub("");
+                              }}
                             >
                               Select {pin}
                             </button>
@@ -311,13 +339,13 @@ export default function Home() {
                   </table>
                 </div>
               ) : (
-              <div>         
+                <div>
                   <strong> BeagleBoard.org Pinouts </strong>
                   <p>An interactive BeagleBoard.org single board computers cape header pins information portal.</p>
                   <p>Action: Click on PX.Y of your choice to see it's information here!</p>
-              </div>
+                </div>
 
-            )}
+              )}
             </div>
           </div>
 
