@@ -162,6 +162,7 @@ export default function Home() {
     if (pins[pin]) {
       setSelectedPin(pin);
       setPinDetails(pins[pin]);
+      setActiveSub("");
     } else {
       console.warn(`Pin ${pin} not found.`);
     }
@@ -326,7 +327,8 @@ export default function Home() {
                       {tableData.map((data, index) => (
                         <tr key={index}>
                           <td
-                            className={`relative text-right px-2`}
+                            className={`relative text-right px-2 ${data.leftSub.includes(activeSub ?? '') ? 'bg-green-400' : ''
+                              }`}
                           >
                             <div className="inline-flex items-center">
                               {data.leftSub.map((sub, idx) => (
@@ -351,6 +353,7 @@ export default function Home() {
                             </div>
                           </td>
 
+
                           <td className="text-center justify-center px-2">
                             <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
                               {data.row[0]}
@@ -362,7 +365,8 @@ export default function Home() {
                             </span>
                           </td>
                           <td
-                            className={`text-left `}
+                            className={`text-left ${data.rightSub.includes(activeSub||'') ? 'bg-green-400' : ''
+                              }`}
                           >
                             <div className="inline-flex items-center">
                               <span
@@ -387,6 +391,7 @@ export default function Home() {
                               ))}
                             </div>
                           </td>
+
                         </tr>
                       ))}
                     </tbody>
