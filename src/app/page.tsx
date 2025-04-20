@@ -427,9 +427,8 @@ export default function Home() {
               <button className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
                 onClick={() => handleBusMode(CAN)}
               >CAN</button>
-              <button className="px-3 py-1 bg-[#FFD700] text-white text-sm rounded hover:bg-[#FFD709]"
+              <button className="px-3 py-1 bg-[#FFD700] text-black text-sm rounded hover:bg-[#FFD709]"
                 onClick={() => handleBusMode(PRU)}>PRU</button>
-
             </div>
             <h2 className="text-xl text-black font-bold mb-4">{selectedPin}</h2>
             <div className="text-black overflow-x-auto">
@@ -477,8 +476,6 @@ export default function Home() {
                         </tr>
                       ))}
                     </tbody>
-
-
                     {/* Functionality Buttons at Bottom */}
                     <tfoot>
                       <tr className="bg-gray-100">
