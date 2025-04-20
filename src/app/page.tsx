@@ -7,7 +7,19 @@ import yaml from "js-yaml";
 
 
 export default function Home() {
-
+  type TableDataItem = {
+    left: string;
+    lefsubClass: string;
+    leftSub: string[];
+    row: (string | number)[];
+    right: string;
+    rightsubClass: string;
+    rightSub: string[];
+    lefsubClass1?: string;
+    leftSub1?: string[];
+    rightSub1?: string[];
+    rightsub1Class?: string;
+  };
 
   const [tableData1, setTableData1] = useState([
     { left: "P1.01", lefsubClass: "bg-[#FE5555] text-white", leftSub: ["VIN_5V"], row: ["01", "02"], right: "P1.02", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO1_10"], },
@@ -55,8 +67,29 @@ export default function Home() {
   const [pinDetails, setPinDetails] = useState<Record<string, any> | null>(
     null
   );
+  const [isBUSmode, setBUSmode] = useState(false);
+  const [originalTableData1, setOriginalTableData1] = useState<TableDataItem[]>([]);
+  const [originalTableData2, setOriginalTableData2] = useState<TableDataItem[]>([]);
 
+  useEffect(() => {
+    setOriginalTableData1(tableData1);
+    setOriginalTableData2(tableData2);
+  }, []);
 
+  const resetTables = () => {
+    setTableData1(JSON.parse(JSON.stringify(originalTableData1)));
+    setTableData2(JSON.parse(JSON.stringify(originalTableData2)));
+    setBUSmode(false);
+    setValidSubs([]);
+  };
+
+  const handleBusMode = (busData: string[][]) => {
+    resetTables();
+    busData.forEach(([pin, label]) => updatePin(pin, label));
+    setBUSmode(true);
+    setValidSubs(busData.map(([, label]) => label));
+  };
+  
   const updatePinSub1 = (pin: string, newValue: string) => {
     const port = pin.split(".")[0]; // "P2"
     if (port == "P1") {
@@ -137,16 +170,122 @@ export default function Home() {
   const getPinModes = (pinName: string, signalName: string) => {
     return pins[pinName]?.[signalName] || {}; // Return the mode object directly
   };
-
-  // Example Usage
-  const pinModes = getPinModes("P1.02", "GPIO1_10");
-  console.log(selectedPin, pins[selectedPin])
   if (pins[selectedPin]) {
     const firstSignal = Object.keys(pins[selectedPin])[0]; // Get first available signal
     console.log(getPinModes(selectedPin, firstSignal)[`mode0`]); // Now it won't break
   } else {
     console.log("Pins data not yet available or selectedPin is invalid");
   }
+
+  const updatePin = (pinName: string, newValue: string) => {
+    setTableData1((prevData) =>
+      prevData.map((row) => {
+        const updatedRow = { ...row };
+
+        if (row.leftSub.includes(pinName)) {
+          updatedRow.leftSub = [newValue];
+        }
+        if (row.rightSub.includes(pinName)) {
+          updatedRow.rightSub = [newValue];
+        }
+
+        return updatedRow;
+      })
+    );
+
+    setTableData2((prevData) =>
+      prevData.map((row) => {
+        const updatedRow = { ...row };
+
+        if (row.leftSub.includes(pinName)) {
+          updatedRow.leftSub = [newValue];
+        }
+        if (row.rightSub.includes(pinName)) {
+          updatedRow.rightSub = [newValue];
+        }
+
+        return updatedRow;
+      })
+    );
+  };
+  const SPI = [
+    ["GPIO1_13", "CS"],
+    ["GPIO1_14", "CLK"],
+    ["GPIO1_30", "MISO"],
+    ["GPIO1_8", "MOSI"]
+  ];
+  const UART = [
+    ["GPI01_21", "TX"],
+    ["GPI01_20", "RX"],
+  ];
+  const Analog = [
+    ["AIN_REFN", "REF-"],
+    ["GPIO1_1", "0"],
+    ["GPIO1_6", "1"],
+    ["GPIO1_5", "2"],
+    ["GPIO1_4", "3"],
+    ["GPIO1_3", "4"],
+    ["GPIO1_10", "6"],
+    ["AIN_REFP", "REF+"],
+    ["GPIO0_54", "5"],
+    ["GPI01_16", "7"]
+  ];
+  const PWM = [
+    ["GPIO1_29", "B"],
+    ["GPI00_55", "A"],
+    ["GPIO0_85", "A"],
+  ];
+  const PRU = [
+    ["GPIO1_62", "17"],
+    ["GPIO1_59", "13"],
+    ["GPIO1_29", "10"],
+    ["GPIO0_88", "1"],
+    ["GPI00_50", "5"],
+    ["GPI00_55", "9"],
+    ["GPIO0_90", "3"],
+    ["GPIO0_52", "15"],
+    ["GPIO0_54", "8"],
+    ["GPIO0_53", "16"],
+    ["GPI00_63", "18"],
+    ["GPIO0_51", "6"],
+    ["GPIO0_61", "15"],
+    ["GPIO0_58", "3"],
+    ["GPI00_57", "2"],
+    ["GPIO0_45", "0_87"],
+    ["GPIO0_46", "0_89"],
+    ["GPIO0_47", "TX"],
+    ["PWR_BTN", "RX"],
+    ["GPIO0_60", "5"]
+  ];
+  const CAN = [
+    ["GPIO0_44", "TX"],
+    ["GPIO0_43", "RX"],
+    ["MCU_GPIO0_16", "RX"],
+    ["MCU_GPIO0_15", "TX"],
+  ];
+  const BAT = [
+    ["VBAT", "VIN"],
+    ["BAT_TEMP", "TEMP"],
+    ["GND", "GND"],
+  ];
+  const USB = [
+    ["USB1_VBUS", "VBUS"],
+    ["VIN_USB", "VIN"],
+    ["USB1_DN", "DN"],
+    ["USB1_DP", "DP"],
+    ["GND", "GND"],
+  ];
+  const SYS = [
+    ["VIN_5V", "VIN"],
+    ["VDD_3V3", "3.3V"],
+    ["GND", "GND"],
+    ["VOUT", "VOUT"],
+    ["VOUT_VSYS", "VOUT"],
+    ["VDD_3V3", "3.3V"],
+    ["PWR_BTN", "PWRBTN"],
+    ["nRESET", "NRST"],
+  ];
+  const [validSubs, setValidSubs] = useState<string[]>([]); // Make validSubs dynamic
 
   return (
     <div className="flex flex-col lg:h-screen m-0 p-0 ">
@@ -186,46 +325,63 @@ export default function Home() {
                     <tbody>
                       {tableData.map((data, index) => (
                         <tr key={index}>
-                          <td className="relative text-right px-2">
+                          <td
+                            className={`relative text-right px-2`}
+                          >
                             <div className="inline-flex items-center">
                               {data.leftSub.map((sub, idx) => (
                                 <span
                                   key={idx}
-                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${data.lefsubClass}`}
+                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
+                                    ? validSubs.includes(sub)
+                                      ? data.lefsubClass
+                                      : "bg-gray-400 text-white"
+                                    : data.lefsubClass
+                                    }`}
                                 >
                                   <span className="inline-block transform skew-x-12">{sub}</span>
                                 </span>
                               ))}
                               <span
-                                className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer text-white rounded-md bg-[#cc0077]"
-                                onClick={() => handlePinClick(data.left)}
+                                className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer rounded-md bg-[#cc0077]"
+                                onClick={() => { resetTables(); handlePinClick(data.left) }}
                               >
-                                <span className="inline-block transform skew-x-12">{data.left}</span>
+                                <span className="inline-block text-white transform skew-x-12">{data.left}</span>
                               </span>
                             </div>
                           </td>
+
+
                           <td className="text-center justify-center px-2">
                             <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
                               {data.row[0]}
                             </span>
                           </td>
-                          <td className="text-center circular pr-2">
+                          <td className="text-center justify-center px-2">
                             <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
                               {data.row[1]}
                             </span>
                           </td>
-                          <td className="text-left">
+                          <td
+                            className={`text-left `}
+                          >
                             <div className="inline-flex items-center">
                               <span
-                                className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 text-white rounded-md bg-[#cc0077]"
-                                onClick={() => handlePinClick(data.right)}
+                                className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 rounded-md bg-[#cc0077]"
+                                onClick={() => { resetTables(); handlePinClick(data.right) }}
                               >
                                 <span className="inline-block transform skew-x-12">{data.right}</span>
                               </span>
                               {data.rightSub.map((sub, idx) => (
                                 <span
                                   key={idx}
-                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${data.rightsubClass}`}
+
+                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
+                                    ? validSubs.includes(sub)
+                                      ? data.rightsubClass
+                                      : "bg-gray-400 text-white"
+                                    : data.rightsubClass
+                                    }`}
                                 >
                                   <span className="inline-block transform skew-x-12">{sub}</span>
                                 </span>
@@ -240,8 +396,40 @@ export default function Home() {
               </div>
             ))}
           </div>
-
           <div className="flex flex-col flex-[1_1_0%] min-h-60 bg-gray-100 rounded-lg mt-[4vh] shadow-md rounded-2xl m-4 relative p-4">
+            <div className="flex justify-between items-center gap-2 mb-4">
+              <button className="px-3 py-1 bg-teal-600 text-white text-sm rounded hover:bg-teal-700"
+                onClick={() => resetTables()}>ALL</button>
+              <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                onClick={() => handleBusMode(SYS)}>SYS</button>
+              <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                onClick={() => handleBusMode(USB)}>USB</button>
+              <button className="px-3 py-1 bg-yellow-500 text-black text-sm rounded hover:bg-yellow-600"
+                onClick={() => handleBusMode(Analog)}>Analog</button>
+              <button
+                className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
+                onClick={() => handleBusMode(SPI)}
+              >
+                SPI
+              </button>
+              <button
+                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                onClick={() => handleBusMode(UART)}
+              >
+                UART
+              </button>
+              <button className="px-3 py-1 bg-[#FF00FF] text-white text-sm rounded hover:bg-[#FF00FF]"
+                onClick={() => handleBusMode(PWM)}>PWM</button>
+
+              <button className="px-3 py-1 bg-cyan-600 text-white text-sm rounded hover:bg-cyan-700"
+                onClick={() => handleBusMode(BAT)}
+              >BAT</button>
+              <button className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
+                onClick={() => handleBusMode(CAN)}
+              >CAN</button>
+              <button className="px-3 py-1 bg-[#FFD700] text-black text-sm rounded hover:bg-[#FFD709]"
+                onClick={() => handleBusMode(PRU)}>PRU</button>
+            </div>
             <h2 className="text-xl text-black font-bold mb-4">{selectedPin}</h2>
             <div className="text-black overflow-x-auto">
               {pinDetails ? (
@@ -288,8 +476,6 @@ export default function Home() {
                         </tr>
                       ))}
                     </tbody>
-
-
                     {/* Functionality Buttons at Bottom */}
                     <tfoot>
                       <tr className="bg-gray-100">
@@ -300,7 +486,10 @@ export default function Home() {
                           <td key={`action-${pin}`} className="border border-gray-300 px-2 py-2">
                             <button
                               className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full text-xs"
-                              onClick={() => updatePinSub1(selectedPin, pin)}
+                              onClick={() => {
+                                resetTables();
+                                updatePinSub1(selectedPin, pin);
+                              }}
                             >
                               Select {pin}
                             </button>
@@ -311,13 +500,13 @@ export default function Home() {
                   </table>
                 </div>
               ) : (
-              <div>         
+                <div>
                   <strong> BeagleBoard.org Pinouts </strong>
                   <p>An interactive BeagleBoard.org single board computers cape header pins information portal.</p>
                   <p>Action: Click on PX.Y of your choice to see it's information here!</p>
-              </div>
+                </div>
 
-            )}
+              )}
             </div>
           </div>
 
