@@ -370,7 +370,7 @@ export default function Home() {
                                 className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 rounded-md bg-[#cc0077]"
                                 onClick={() => { resetTables(); handlePinClick(data.right) }}
                               >
-                                <span className="inline-block transform skew-x-12">{data.right}</span>
+                                <span className="inline-block text-white transform skew-x-12">{data.right}</span>
                               </span>
                               {data.rightSub.map((sub, idx) => (
                                 <span
