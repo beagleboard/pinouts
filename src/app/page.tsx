@@ -5,7 +5,6 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Pinouts from "./Pinouts";
 import yaml from "js-yaml";
 
-
 export default function Home() {
   type TableDataItem = {
     left: string;
@@ -64,12 +63,11 @@ export default function Home() {
 
   const [pins, setPins] = useState<Record<string, any>>({});
   const [selectedPin, setSelectedPin] = useState<string>("");
-  const [pinDetails, setPinDetails] = useState<Record<string, any> | null>(
-    null
-  );
+  const [pinDetails, setPinDetails] = useState<Record<string, any> | null>(null);
   const [isBUSmode, setBUSmode] = useState(false);
   const [originalTableData1, setOriginalTableData1] = useState<TableDataItem[]>([]);
   const [originalTableData2, setOriginalTableData2] = useState<TableDataItem[]>([]);
+  const [activeTable, setActiveTable] = useState<"P1" | "P2">("P1"); // State to track active table
 
   useEffect(() => {
     setOriginalTableData1(tableData1);
@@ -93,11 +91,9 @@ export default function Home() {
   const updatePinSub1 = (pin: string, newValue: string) => {
     const port = pin.split(".")[0]; // "P2"
     if (port == "P1") {
-
       setTableData1((prevData) =>
         prevData.map((row) => {
           const pinNumber = parseInt(pin.replace("P1.", ""), 10);
-
           if (!isNaN(pinNumber)) {
             if (pinNumber % 2 !== 0 && row.left === pin) {
               return { ...row, leftSub: [newValue] };
@@ -113,7 +109,6 @@ export default function Home() {
       setTableData2((prevData) =>
         prevData.map((row) => {
           const pinNumber = parseInt(pin.replace("P2.", ""), 10);
-
           if (!isNaN(pinNumber)) {
             if (pinNumber % 2 !== 0 && row.left === pin) {
               return { ...row, leftSub: [newValue] };
@@ -130,31 +125,22 @@ export default function Home() {
   useEffect(() => {
     const fetchPins = async () => {
       try {
-        // Fetch both YAML files
         const [response1, response2] = await Promise.all([
           fetch("./P1.yaml"),
           fetch("./P2.yaml"),
         ]);
-
-        // Convert responses to text
         const [text1, text2] = await Promise.all([
           response1.text(),
           response2.text(),
         ]);
-
-        // Parse YAML files
         const data1 = yaml.load(text1) as Record<string, any>;
         const data2 = yaml.load(text2) as Record<string, any>;
-
-        // Merge pin data from both files
         const mergedPins = { ...data1.pins, ...data2.pins };
-        setPins(mergedPins); // Store merged pins
-
+        setPins(mergedPins);
       } catch (error) {
         console.error("Failed to fetch pin data:", error);
       }
     };
-
     fetchPins();
   }, []);
 
@@ -168,27 +154,19 @@ export default function Home() {
   };
 
   const getPinModes = (pinName: string, signalName: string) => {
-    return pins[pinName]?.[signalName] || {}; // Return the mode object directly
+    return pins[pinName]?.[signalName] || {};
   };
-  if (pins[selectedPin]) {
-    const firstSignal = Object.keys(pins[selectedPin])[0]; // Get first available signal
-    console.log(getPinModes(selectedPin, firstSignal)[`mode0`]); // Now it won't break
-  } else {
-    console.log("Pins data not yet available or selectedPin is invalid");
-  }
 
   const updatePin = (pinName: string, newValue: string) => {
     setTableData1((prevData) =>
       prevData.map((row) => {
         const updatedRow = { ...row };
-
         if (row.leftSub.includes(pinName)) {
           updatedRow.leftSub = [newValue];
         }
         if (row.rightSub.includes(pinName)) {
           updatedRow.rightSub = [newValue];
         }
-
         return updatedRow;
       })
     );
@@ -196,18 +174,17 @@ export default function Home() {
     setTableData2((prevData) =>
       prevData.map((row) => {
         const updatedRow = { ...row };
-
         if (row.leftSub.includes(pinName)) {
           updatedRow.leftSub = [newValue];
         }
         if (row.rightSub.includes(pinName)) {
           updatedRow.rightSub = [newValue];
         }
-
         return updatedRow;
       })
     );
   };
+
   const SPI = [
     ["GPIO1_13", "CS"],
     ["GPIO1_14", "CLK"],
@@ -285,12 +262,114 @@ export default function Home() {
     ["PWR_BTN", "PWRBTN"],
     ["nRESET", "NRST"],
   ];
-  const [validSubs, setValidSubs] = useState<string[]>([]); // Make validSubs dynamic
+  const [validSubs, setValidSubs] = useState<string[]>([]);
+
+  // Function to render the active table
+  const renderActiveTable = () => {
+    const tableData = activeTable === "P1" ? tableData1 : tableData2;
+    const tableIndex = activeTable === "P1" ? 0 : 1;
+    
+    return (
+      <div key={tableIndex} className="flex flex-col items-center w-full sm:w-xs max-w-xs sm:max-w-sm mr-1">
+           <div className="flex justify-center gap-2 mb-4 ml-8">
+              <button
+                className={`px-4 py-2 rounded-md ${
+                  activeTable === "P1" 
+                    ? "bg-[#cc0077] text-white" 
+                    : "bg-gray-300 text-gray-700"
+                }`}
+                onClick={() => setActiveTable("P1")}
+              >
+                P1
+              </button>
+              <button
+                className={`px-4 py-2 rounded-md ${
+                  activeTable === "P2" 
+                    ? "bg-[#cc0077] text-white" 
+                    : "bg-gray-300 text-gray-700"
+                }`}
+                onClick={() => setActiveTable("P2")}
+              >
+                P2
+              </button>
+            </div>
+        <div className="flex justify-center w-full">
+          <table className="border-collapse border-0 lg:h-[60vh] lg:w-[20vh] xl:w-[40vh] lg:text-[12px] xl:font-normal 2xl:text-sm">
+            <tbody>
+              {tableData.map((data, index) => (
+                <tr key={index}>
+                  <td className={`relative text-right px-2`}>
+                    <div className="inline-flex items-center">
+                      {data.leftSub.map((sub, idx) => (
+                        <span
+                          key={idx}
+                          className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${
+                            isBUSmode
+                              ? validSubs.includes(sub)
+                                ? data.lefsubClass
+                                : "bg-gray-400 text-white"
+                              : data.lefsubClass
+                          }`}
+                        >
+                          <span className="inline-block transform skew-x-12">{sub}</span>
+                        </span>
+                      ))}
+                      <span
+                        className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer rounded-md bg-[#cc0077]"
+                        onClick={() => { resetTables(); handlePinClick(data.left) }}
+                      >
+                        <span className="inline-block text-white transform skew-x-12">{data.left}</span>
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="text-center justify-center px-2">
+                    <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
+                      {data.row[0]}
+                    </span>
+                  </td>
+                  <td className="text-center justify-center px-2">
+                    <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
+                      {data.row[1]}
+                    </span>
+                  </td>
+                  <td className={`text-left`}>
+                    <div className="inline-flex items-center">
+                      <span
+                        className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 rounded-md bg-[#cc0077]"
+                        onClick={() => { resetTables(); handlePinClick(data.right) }}
+                      >
+                        <span className="inline-block transform skew-x-12">{data.right}</span>
+                      </span>
+                      {data.rightSub.map((sub, idx) => (
+                        <span
+                          key={idx}
+                          className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${
+                            isBUSmode
+                              ? validSubs.includes(sub)
+                                ? data.rightsubClass
+                                : "bg-gray-400 text-white"
+                              : data.rightsubClass
+                          }`}
+                        >
+                          <span className="inline-block transform skew-x-12">{sub}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="flex flex-col lg:h-screen m-0 p-0 ">
       <div>
-        <div className="top-0 md:left-0 md:right-0 border-b flex backdrop-blur-sm justify-center py-[10px]  items-center font-bold z-50">
+        <div className="top-0 md:left-0 md:right-0 border-b flex backdrop-blur-sm justify-center py-[10px] items-center font-bold z-50">
           <div className="flex w-full max-w-screen mx-2 md:mx-4 justify-between items-center">
             <div className="flex flex-row gap-2 items-center group">
               <Link href="/">
@@ -310,94 +389,19 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <main className=" flex flex-col flex-[1_1_0%] min-h-80 bg-highlight  rounded-2xl m-4 relative"
-      >
-        <div className="flex flex-col flex-[1_1_0%] lg:flex-row items-center justify-center  h-full min-h-[40vh] w-full lg:gap-4 xl:gap-8">
+      <main className="flex flex-col flex-[1_1_0%] min-h-80 bg-highlight rounded-2xl m-4 relative">
+        <div className="flex flex-col flex-[1_1_0%] lg:flex-row items-center justify-center h-full min-h-[40vh]  lg:gap-4 xl:gap-8">
           {/* Tables Section */}
-          <div className="flex flex-col lg:flex-row items-center justify-center flex-1 gap-8 w-full">
-            {[tableData1, tableData2].map((tableData, tableIndex) => (
-              <div key={tableIndex} className="flex flex-col items-center w-full sm:w-xs max-w-xs sm:max-w-sm mr-1">
-                <h2 className={`text-base sm:text-base md:text-md font-bold mb-2 text-black ${tableIndex === 0 ? "ml-8" : "ml-12"}`}>
-                  {tableIndex === 0 ? "P1" : "P2"}
-                </h2>
-                <div className="flex justify-center w-full">
-                  <table className="border-collapse border-0 lg:h-[60vh] lg:w-[20vh] xl:w-[40vh] lg:text-[12px]  xl:font-normal  2xl:text-sm">
-                    <tbody>
-                      {tableData.map((data, index) => (
-                        <tr key={index}>
-                          <td
-                            className={`relative text-right px-2`}
-                          >
-                            <div className="inline-flex items-center">
-                              {data.leftSub.map((sub, idx) => (
-                                <span
-                                  key={idx}
-                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
-                                    ? validSubs.includes(sub)
-                                      ? data.lefsubClass
-                                      : "bg-gray-400 text-white"
-                                    : data.lefsubClass
-                                    }`}
-                                >
-                                  <span className="inline-block transform skew-x-12">{sub}</span>
-                                </span>
-                              ))}
-                              <span
-                                className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer rounded-md bg-[#cc0077]"
-                                onClick={() => { resetTables(); handlePinClick(data.left) }}
-                              >
-                                <span className="inline-block text-white transform skew-x-12">{data.left}</span>
-                              </span>
-                            </div>
-                          </td>
-
-
-                          <td className="text-center justify-center px-2">
-                            <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
-                              {data.row[0]}
-                            </span>
-                          </td>
-                          <td className="text-center justify-center px-2">
-                            <span className="flex items-center justify-center text-white rounded-md bg-gray-700" style={{ width: '1.75rem', height: '1.75rem' }}>
-                              {data.row[1]}
-                            </span>
-                          </td>
-                          <td
-                            className={`text-left `}
-                          >
-                            <div className="inline-flex items-center">
-                              <span
-                                className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 rounded-md bg-[#cc0077]"
-                                onClick={() => { resetTables(); handlePinClick(data.right) }}
-                              >
-                                <span className="inline-block transform skew-x-12">{data.right}</span>
-                              </span>
-                              {data.rightSub.map((sub, idx) => (
-                                <span
-                                  key={idx}
-
-                                  className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
-                                    ? validSubs.includes(sub)
-                                      ? data.rightsubClass
-                                      : "bg-gray-400 text-white"
-                                    : data.rightsubClass
-                                    }`}
-                                >
-                                  <span className="inline-block transform skew-x-12">{sub}</span>
-                                </span>
-                              ))}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col lg:flex-row items-center justify-center  gap-8 ">
+            {/* Table selection buttons */}
+         
+            
+            {/* Render the active table */}
+            {renderActiveTable()}
           </div>
-          <div className="flex flex-col flex-[1_1_0%] min-h-60 bg-gray-100 rounded-lg mt-[4vh] shadow-md rounded-2xl m-4 relative p-4">
-            <div className="flex justify-between items-center gap-2 mb-4">
+          
+          <div className="flex flex-col flex-[1_1_0%] min-h-60 bg-gray-100 rounded-lg mt-[4vh] shadow-md rounded-2xl m-4 relative p-4 max-w-[300vh]">
+            <div className="flex justify-between items-center gap-2 mb-4 max-w-[300vh]">
               <button className="px-3 py-1 bg-teal-600 text-white text-sm rounded hover:bg-teal-700"
                 onClick={() => resetTables()}>ALL</button>
               <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
@@ -435,7 +439,6 @@ export default function Home() {
               {pinDetails ? (
                 <div className="mb-4">
                   <table className="w-full border-collapse border border-gray-300 table-fixed">
-                    {/* Table Header */}
                     <thead>
                       <tr className="bg-gray-200">
                         <th className="border border-gray-300 px-2 py-2 text-sm">Mode</th>
@@ -450,7 +453,6 @@ export default function Home() {
                       </tr>
                     </thead>
 
-                    {/* Table Body */}
                     <tbody>
                       {[...Array(9).keys()].map((modeIndex) => (
                         <tr key={modeIndex} className="text-center">
@@ -476,7 +478,6 @@ export default function Home() {
                         </tr>
                       ))}
                     </tbody>
-                    {/* Functionality Buttons at Bottom */}
                     <tfoot>
                       <tr className="bg-gray-100">
                         <td className="border border-gray-300 px-2 py-2 font-bold text-center text-sm">
@@ -505,19 +506,14 @@ export default function Home() {
                   <p>An interactive BeagleBoard.org single board computers cape header pins information portal.</p>
                   <p>Action: Click on PX.Y of your choice to see it's information here!</p>
                 </div>
-
               )}
             </div>
           </div>
-
         </div>
       </main>
 
-
-
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-2 border-t md:px-4 ">
-
-        <p className="text-sm text-muted-foreground text-black ">
+      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-2 border-t md:px-4">
+        <p className="text-sm text-muted-foreground text-black">
           <Link href="https://docs.beagleboard.org/" target="_blank">
             <Pinouts /> | &copy; {new Date().getFullYear()} BeagleBoard.org Foundation.</Link>
         </p>
@@ -531,6 +527,5 @@ export default function Home() {
         </nav>
       </footer>
     </div>
-
   );
 }
