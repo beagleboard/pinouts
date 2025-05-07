@@ -87,7 +87,7 @@ export default function Home() {
     setBUSmode(true);
     setValidSubs(busData.map(([, label]) => label));
   };
-  
+
   const updatePinSub1 = (pin: string, newValue: string) => {
     const port = pin.split(".")[0]; // "P2"
     if (port == "P1") {
@@ -268,31 +268,29 @@ export default function Home() {
   const renderActiveTable = () => {
     const tableData = activeTable === "P1" ? tableData1 : tableData2;
     const tableIndex = activeTable === "P1" ? 0 : 1;
-    
+
     return (
       <div key={tableIndex} className="flex flex-col items-center w-full sm:w-xs max-w-xs sm:max-w-sm mr-1">
-           <div className="flex justify-center gap-2 mb-4 ml-8">
-              <button
-                className={`px-4 py-2 rounded-md ${
-                  activeTable === "P1" 
-                    ? "bg-[#cc0077] text-white" 
-                    : "bg-gray-300 text-gray-700"
-                }`}
-                onClick={() => setActiveTable("P1")}
-              >
-                P1
-              </button>
-              <button
-                className={`px-4 py-2 rounded-md ${
-                  activeTable === "P2" 
-                    ? "bg-[#cc0077] text-white" 
-                    : "bg-gray-300 text-gray-700"
-                }`}
-                onClick={() => setActiveTable("P2")}
-              >
-                P2
-              </button>
-            </div>
+        <div className="flex justify-center gap-2 mb-4 ml-8">
+          <button
+            className={`px-4 py-2 rounded-md ${activeTable === "P1"
+              ? "bg-[#cc0077] text-white"
+              : "bg-gray-300 text-gray-700"
+              }`}
+            onClick={() => setActiveTable("P1")}
+          >
+            P1
+          </button>
+          <button
+            className={`px-4 py-2 rounded-md ${activeTable === "P2"
+              ? "bg-[#cc0077] text-white"
+              : "bg-gray-300 text-gray-700"
+              }`}
+            onClick={() => setActiveTable("P2")}
+          >
+            P2
+          </button>
+        </div>
         <div className="flex justify-center w-full">
           <table className="border-collapse border-0 lg:h-[60vh] lg:w-[20vh] xl:w-[40vh] lg:text-[12px] xl:font-normal 2xl:text-sm">
             <tbody>
@@ -303,13 +301,12 @@ export default function Home() {
                       {data.leftSub.map((sub, idx) => (
                         <span
                           key={idx}
-                          className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${
-                            isBUSmode
-                              ? validSubs.includes(sub)
-                                ? data.lefsubClass
-                                : "bg-gray-400 text-white"
-                              : data.lefsubClass
-                          }`}
+                          className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
+                            ? validSubs.includes(sub)
+                              ? data.lefsubClass
+                              : "bg-gray-400 text-white"
+                            : data.lefsubClass
+                            }`}
                         >
                           <span className="inline-block transform skew-x-12">{sub}</span>
                         </span>
@@ -344,13 +341,12 @@ export default function Home() {
                       {data.rightSub.map((sub, idx) => (
                         <span
                           key={idx}
-                          className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${
-                            isBUSmode
-                              ? validSubs.includes(sub)
-                                ? data.rightsubClass
-                                : "bg-gray-400 text-white"
-                              : data.rightsubClass
-                          }`}
+                          className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
+                            ? validSubs.includes(sub)
+                              ? data.rightsubClass
+                              : "bg-gray-400 text-white"
+                            : data.rightsubClass
+                            }`}
                         >
                           <span className="inline-block transform skew-x-12">{sub}</span>
                         </span>
@@ -393,13 +389,10 @@ export default function Home() {
         <div className="flex flex-col flex-[1_1_0%] lg:flex-row items-center justify-center h-full min-h-[40vh]  lg:gap-4 xl:gap-8">
           {/* Tables Section */}
           <div className="flex flex-col lg:flex-row items-center justify-center  gap-8 ">
-            {/* Table selection buttons */}
-         
-            
             {/* Render the active table */}
             {renderActiveTable()}
           </div>
-          
+
           <div className="flex flex-col flex-[1_1_0%] min-h-60 bg-gray-100 rounded-lg mt-[4vh] shadow-md rounded-2xl m-4 relative p-4 max-w-[300vh]">
             <div className="flex justify-between items-center gap-2 mb-4 max-w-[300vh]">
               <button className="px-3 py-1 bg-teal-600 text-white text-sm rounded hover:bg-teal-700"
@@ -440,51 +433,13 @@ export default function Home() {
                 <div className="mb-4">
                   <table className="w-full border-collapse border border-gray-300 table-fixed">
                     <thead>
-                      <tr className="bg-gray-200">
+                      <tr className="">
                         <th className="border border-gray-300 px-2 py-2 text-sm">Mode</th>
                         {Object.keys(pinDetails).map((pin) => (
                           <th
                             key={pin}
                             className="border border-gray-300 px-2 py-2 text-sm truncate whitespace-nowrap"
                           >
-                            {pin}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {[...Array(9).keys()].map((modeIndex) => (
-                        <tr key={modeIndex} className="text-center">
-                          <td className="border border-gray-300 px-2 py-2 font-bold xl:text-[12px] 2xl:text-sm whitespace-nowrap">
-                            Mode{modeIndex}
-                          </td>
-                          {Object.keys(pinDetails).map((pin, i) => {
-                            let modeValue = "";
-                            if (pins[selectedPin]) {
-                              const firstSignal = Object.keys(pins[selectedPin])[i];
-                              modeValue = getPinModes(selectedPin, firstSignal)[`mode${modeIndex}`] || "";
-                            }
-
-                            return (
-                              <td
-                                key={`${pin}-mode${modeIndex}`}
-                                className="border border-gray-300 px-2 py-2 text-xs whitespace-nowrap overflow-hidden xl:text-[8px] 2xl:text-sm text-ellipsis"
-                              >
-                                <pre className="truncate">{modeValue.trim() ? modeValue : "~"}</pre>
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr className="bg-gray-100">
-                        <td className="border border-gray-300 px-2 py-2 font-bold text-center text-sm">
-                          Actions
-                        </td>
-                        {Object.keys(pinDetails).map((pin) => (
-                          <td key={`action-${pin}`} className="border border-gray-300 px-2 py-2">
                             <button
                               className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full text-xs"
                               onClick={() => {
@@ -494,10 +449,85 @@ export default function Home() {
                             >
                               Select {pin}
                             </button>
-                          </td>
+                          </th>
                         ))}
                       </tr>
-                    </tfoot>
+                    </thead>
+
+                    <tbody>
+                      {[...Array(9).keys()].map((modeIndex) => (
+                        <tr key={`mode${modeIndex}`} className="text-center">
+                          <td className="border border-gray-300 px-2 py-2 font-bold xl:text-[12px] 2xl:text-sm whitespace-nowrap">
+                            Mode{modeIndex}
+                          </td>
+                          {Object.keys(pinDetails).map((pin, i) => {
+                            let modeValue = "";
+                            if (pins[selectedPin]) {
+                              const firstSignal = Object.keys(pins[selectedPin])[i];
+                              modeValue = getPinModes(selectedPin, firstSignal)[`mode${modeIndex}`] || "";
+                            }
+                            const displayValue = modeValue.trim() ? modeValue : "~";
+                            return (
+                              <td
+                                key={`${pin}-mode${modeIndex}`}
+                                className="border border-gray-300 px-2 py-2 text-xs whitespace-nowrap overflow-hidden xl:text-[8px] 2xl:text-sm text-ellipsis"
+                              >
+                                {displayValue === "~" ? (
+                                  displayValue
+                                ) : (
+                                  <button
+                                    className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full text-xs"
+                                    onClick={() => {
+                                      resetTables();
+                                      updatePinSub1(selectedPin, modeValue);
+                                    }}
+                                  >
+                                    {displayValue}
+                                  </button>
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+
+                      {["Mspm0mode", "Mspm1mode"].map((label) => (
+                        <tr key={label} className="text-center">
+                          <td className="border border-gray-300 px-2 py-2 font-bold xl:text-[12px] 2xl:text-sm whitespace-nowrap">
+                            {label}
+                          </td>
+                          {Object.keys(pinDetails).map((pin, i) => {
+                            let modeValue = "";
+                            if (pins[selectedPin]) {
+                              const firstSignal = Object.keys(pins[selectedPin])[i];
+                              modeValue = getPinModes(selectedPin, firstSignal)[label] || "";
+                            }
+                            const displayValue = modeValue.trim() ? modeValue : "~";
+                            return (
+                              <td
+                                key={`${pin}-${label}`}
+                                className="border border-gray-300 px-2 py-2 text-xs whitespace-nowrap overflow-hidden xl:text-[8px] 2xl:text-sm text-ellipsis"
+                              >
+                                {displayValue === "~" ? (
+                                  displayValue
+                                ) : (
+                                  <button
+                                    className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 w-full text-xs"
+                                    onClick={() => {
+                                      resetTables();
+                                      updatePinSub1(selectedPin, modeValue);
+                                    }}
+                                  >
+                                    {displayValue}
+                                  </button>
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+
                   </table>
                 </div>
               ) : (
@@ -511,7 +541,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-2 border-t md:px-4">
         <p className="text-sm text-muted-foreground text-black">
           <Link href="https://docs.beagleboard.org/" target="_blank">
