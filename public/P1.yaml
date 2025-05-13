@@ -23,6 +23,8 @@ pins:
       mode6: "EHRPWM1_B"
       mode7: "GPIO1_10"
       mode8: "EQEP0_I"
+      Mspm0mode: "ADC_CH6"
+      Mspm1mode: "PA16"
     GPIO0_87:
       description: ""
       mode0: "RGMII2_TX_CTL"
@@ -34,8 +36,7 @@ pins:
       mode6: ""
       mode7: "GPIO0_87"
       mode8: ""
-      Mspm0mode: "ADC_CH6"
-      Mspm1mode: "PA16"
+
   P1.03:
     GPIO1_51:
       description: ""
