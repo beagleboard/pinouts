@@ -58,17 +58,60 @@ export default function Home() {
     { left: "P2.29", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_40"], row: [29, 30], right: "P2.30", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_58(PRU)"], rightSub1: [], rightsub1Class: "" },
     { left: "P2.31", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_90(PRU)"], row: [31, 32], right: "P2.32", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI00_57(PRU)"], rightSub1: [], rightsub1Class: "" },
     { left: "P2.33", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: [], leftSub: ["GPIO0_52(PRU)"], row: [33, 34], right: "P2.34", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPIO0_60(PRU)"], rightSub1: [], rightsub1Class: "" },
-    { left: "P2.35", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: ["PA20", "ADC_CH5"], leftSub: ["GPIO0_53(Analog,PRU)"], row: [35, 36], right: "P2.36", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI01_16(Analog)"], rightSub1: ["ADC_CH7", "PA15"], rightsub1Class: "bg-[#5ED28D] text-black" },
+    { left: "P2.35", lefsubClass1: "bg-[#5ED28D] text-black", lefsubClass: "bg-[#E9BB34] text-black", leftSub1: ["PA20", "ADC_CH5"], leftSub: ["GPIO0_54(Analog,PRU)"], row: [35, 36], right: "P2.36", rightsubClass: "bg-[#E9BB34] text-black", rightSub: ["GPI01_16(Analog)"], rightSub1: ["ADC_CH7", "PA15"], rightsub1Class: "bg-[#5ED28D] text-black" },
   ]);
 
   const [pins, setPins] = useState<Record<string, any>>({});
+  const [pininfo, setPininfo] = useState<Record<string, any>>({});
   const [selectedPin, setSelectedPin] = useState<string>("");
   const [pinDetails, setPinDetails] = useState<Record<string, any> | null>(null);
   const [isBUSmode, setBUSmode] = useState(false);
   const [originalTableData1, setOriginalTableData1] = useState<TableDataItem[]>([]);
   const [originalTableData2, setOriginalTableData2] = useState<TableDataItem[]>([]);
   const [activeTable, setActiveTable] = useState<"P1" | "P2">("P1"); // State to track active table
+  const [subpinDetails, setsubPinDetails] = useState<Record<string, any> | null>(null);
+  const [ispin, setpin] = useState(false);
+  const [isbusdetails, setisbusdetails] = useState(false);
+  const [issubpin, setsubpin] = useState(false);
+  const [generatedOutput, setGeneratedOutput] = useState<string>("");
+  // const generatePinArrays = () => {
+  //   // Generate for tableData1 (P1)
+  //   const p1LeftSubs = tableData1.map(item => item.leftSub).flat();
+  //   const p1RightSubs = tableData1.map(item => item.rightSub).flat();
 
+  //   // Generate for tableData2 (P2)
+  //   const p2LeftSubs = tableData2.map(item => item.leftSub).flat();
+  //   const p2RightSubs = tableData2.map(item => item.rightSub).flat();
+
+  //   const output = `// P1 leftSub array:\nconst p1LeftSubs = ${JSON.stringify(p1LeftSubs, null, 2)};\n\n` +
+  //     `// P1 rightSub array:\nconst p1RightSubs = ${JSON.stringify(p1RightSubs, null, 2)};\n\n` +
+  //     `// P2 leftSub array:\nconst p2LeftSubs = ${JSON.stringify(p2LeftSubs, null, 2)};\n\n` +
+  //     `// P2 rightSub array:\nconst p2RightSubs = ${JSON.stringify(p2RightSubs, null, 2)};`;
+
+  //   setGeneratedOutput(output);
+  // };
+
+  const generatePinArrays = () => {
+    // Generate alternating arrays for P1
+    const p1Alternating = [];
+    for (let i = 0; i < tableData1.length; i++) {
+      p1Alternating.push(...tableData1[i].leftSub);
+      p1Alternating.push(...tableData1[i].rightSub);
+    }
+
+    // Generate alternating arrays for P2
+    const p2Alternating = [];
+    for (let i = 0; i < tableData2.length; i++) {
+      p2Alternating.push(...tableData2[i].leftSub);
+      p2Alternating.push(...tableData2[i].rightSub);
+    }
+
+    const output = `p1= ${JSON.stringify(p1Alternating, null, 2)};\n\n` +
+      `p2= ${JSON.stringify(p2Alternating, null, 2)};\n\n` +
+      `// Complete pinout array (P1 then P2):\nconst allPins = ${JSON.stringify([...p1Alternating, ...p2Alternating], null, 2)};`;
+
+    setGeneratedOutput(output);
+  };
   useEffect(() => {
     setOriginalTableData1(tableData1);
     setOriginalTableData2(tableData2);
@@ -79,15 +122,57 @@ export default function Home() {
     setTableData2(JSON.parse(JSON.stringify(originalTableData2)));
     setBUSmode(false);
     setValidSubs([]);
+    setisbusdetails(false);
   };
 
-  const handleBusMode = (busData: string[][]) => {
+  const [activeMode, setActiveMode] = useState<string | null>(null);
+
+  const handleBusMode = (busData: string[][], modeName: string) => {
     resetTables();
     busData.forEach(([pin, label]) => updatePin(pin, label));
     setBUSmode(true);
     setValidSubs(busData.map(([, label]) => label));
+    setisbusdetails(true);
+    setActiveMode(modeName);
   };
 
+  const resetAll = () => {
+    resetTables();
+    setActiveMode(null);
+  };
+
+  // Helper function to determine button style
+  const getButtonStyle = (modeName: string) => {
+    const baseStyle = `
+      px-3 py-1 text-sm mr-[0.1rem] 
+      transition-all duration-200 ease-out
+      relative overflow-hidden
+    `;
+
+    const activeStyle = `
+      ring-4 ring-white ring-opacity-80
+      shadow-lg scale-[1.02]
+      after:content-[''] after:absolute after:inset-0 
+      after:bg-white after:opacity-10 after:animate-pulse
+    `;
+
+    const colorStyles: Record<string, string> = {
+      ALL: "bg-teal-600 text-white hover:bg-teal-700",
+      SYS: "bg-blue-600 text-white hover:bg-blue-700",
+      USB: "bg-green-600 text-white hover:bg-green-700",
+      Analog: "bg-yellow-500 text-black hover:bg-yellow-600",
+      SPI: "bg-purple-600 text-white hover:bg-purple-700",
+      UART: "bg-red-600 text-white hover:bg-red-700",
+      PWM: "bg-[#FF00FF] text-white hover:bg-[#FF00FF]",
+      BAT: "bg-cyan-600 text-white hover:bg-cyan-700",
+      CAN: "bg-purple-600 text-white hover:bg-purple-700",
+      PRU: "bg-[#FFD700] text-black hover:bg-[#FFD709]",
+      I2C: "bg-[#FFD700] text-black hover:bg-[#FFD709]",
+    };
+
+    return `${baseStyle} ${colorStyles[modeName]} ${activeMode === modeName ? activeStyle : 'opacity-90 hover:opacity-100'
+      }`;
+  };
   const updatePinSub1 = (pin: string, newValue: string) => {
     const port = pin.split(".")[0]; // "P2"
     if (port == "P1") {
@@ -122,6 +207,7 @@ export default function Home() {
     }
   };
 
+
   useEffect(() => {
     const fetchPins = async () => {
       try {
@@ -135,16 +221,127 @@ export default function Home() {
         ]);
         const data1 = yaml.load(text1) as Record<string, any>;
         const data2 = yaml.load(text2) as Record<string, any>;
-        const mergedPins = { ...data1.pins, ...data2.pins };
+
+        // Process the pin data with proper null checks
+        const processPinModes = (pinData: Record<string, any>) => {
+          const processed: Record<string, any> = {};
+
+          // Check if pins exists and is an object
+          if (!pinData?.pins || typeof pinData.pins !== 'object') {
+            console.warn('Invalid pin data structure - missing pins object');
+            return processed;
+          }
+
+          for (const [pinName, pinInfo] of Object.entries(pinData.pins)) {
+            if (!pinInfo || typeof pinInfo !== 'object') continue;
+
+            processed[pinName] = {};
+
+            // Check if pinInfo has signal names (like VIN_5V, GPIO1_10, etc.)
+            for (const [signalName, signalInfo] of Object.entries(pinInfo as Record<string, any>)) {
+              if (!signalInfo || typeof signalInfo !== 'object') continue;
+
+              // Create a new object with description first
+              const signalData: Record<string, any> = {
+                description: signalInfo.description || ""
+              };
+
+              // Process all modeX entries (mode0, mode1, etc. and MspmXmode)
+              for (const [modeName, modeValue] of Object.entries(signalInfo as Record<string, any>)) {
+                if (modeName.startsWith('mode') || modeName.startsWith('Mspm')) {
+                  // Handle mode objects (like in your example)
+                  if (typeof modeValue === 'object' && modeValue !== null) {
+                    signalData[modeName] = modeValue.function || "";
+                  } else {
+                    signalData[modeName] = "";
+                  }
+                }
+              }
+
+              processed[pinName][signalName] = signalData;
+            }
+          }
+          return processed;
+        };
+        const processinfo = (pinData: Record<string, any>) => {
+          const processed: Record<string, any> = {};
+
+          // Check if pins exists and is an object
+          if (!pinData?.pins || typeof pinData.pins !== 'object') {
+            console.warn('Invalid pin data structure - missing pins object');
+            return processed;
+          }
+
+          for (const [pinName, pinInfo] of Object.entries(pinData.pins)) {
+            if (!pinInfo || typeof pinInfo !== 'object') continue;
+
+            // Check if pinInfo has signal names (like VIN_5V, GPIO1_10, etc.)
+            for (const [signalName, signalInfo] of Object.entries(pinInfo as Record<string, any>)) {
+              if (!signalInfo || typeof signalInfo !== 'object') continue;
+
+              // Add the main signal description
+              if (signalInfo.description) {
+                processed[signalName] = { description: signalInfo.description };
+              }
+
+              // Process all modeX entries (mode0, mode1, etc. and MspmXmode)
+              for (const [modeName, modeValue] of Object.entries(signalInfo as Record<string, any>)) {
+                if (modeName.startsWith('mode') || modeName.startsWith('Mspm')) {
+                  // Handle mode objects
+                  if (typeof modeValue === 'object' && modeValue !== null) {
+                    const functionName = modeValue.function;
+                    if (functionName && functionName.trim() !== "") {
+                      processed[functionName] = { description: modeValue.description || "" };
+                    }
+                  }
+                }
+              }
+            }
+          }
+          return processed;
+        };
+        const mergedPins = {
+          ...(data1 ? processPinModes(data1) : {}),
+          ...(data2 ? processPinModes(data2) : {})
+        };
+        const mergedPininfo = {
+          ...(data1 ? processinfo(data1) : {}),
+          ...(data2 ? processinfo(data2) : {})
+        };
         setPins(mergedPins);
+        setPininfo(mergedPininfo);
+
       } catch (error) {
         console.error("Failed to fetch pin data:", error);
+        // Initialize empty structures to prevent further errors
+        setPins({});
+        setPininfo({});
       }
     };
     fetchPins();
+    generatePinArrays();
   }, []);
 
+  const handlesubPinClick = (pin: string) => {
+    setpin(false);
+    setsubpin(true);
+    generatePinArrays();
+    console.log(pin);
+    console.log(pininfo);
+    setSelectedPin(pin);
+    setsubPinDetails(pininfo[pin].description
+    );
+    console.log(pininfo[pin].description
+    );
+
+  };
+
+
   const handlePinClick = (pin: string) => {
+    setsubpin(false);
+    setpin(true);
+    generatePinArrays();
+    console.log(pins);
     if (pins[pin]) {
       setSelectedPin(pin);
       setPinDetails(pins[pin]);
@@ -155,7 +352,7 @@ export default function Home() {
   };
 
 
-  
+
   const getPinModes = (pinName: string, signalName: string) => {
     return pins[pinName]?.[signalName] || {};
   };
@@ -193,6 +390,12 @@ export default function Home() {
     ["GPIO1_14(SPI)", "CLK"],
     ["GPIO1_30(SPI)", "MISO"],
     ["GPIO1_8(SPI)", "MOSI"]
+  ];
+  const I2C = [
+    ["GPIO0_44(CAN)", "SDA"],
+    ["GPIO0_43(CAN)", "SCL"],
+    ["MCU_GPIO0_16(CAN)", "SCL"],
+    ["MCU_GPIO0_15(CAN)", "SDA"],
   ];
   const UART = [
     ["GPI01_21(UART)", "TX"],
@@ -285,19 +488,29 @@ export default function Home() {
                       {data.leftSub.map((sub, idx) => (
                         <span
                           key={idx}
+                          onClick={() => {
+                            if (!isBUSmode) {
+                              handlesubPinClick(sub);
+                            }
+                          }}
                           className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
                             ? validSubs.includes(sub)
                               ? data.lefsubClass
-                              : "bg-gray-400 text-white"
-                            : data.lefsubClass
+                              : "bg-gray-400 text-white cursor-not-allowed"
+                            : `${data.lefsubClass} cursor-pointer`
                             }`}
                         >
                           <span className="inline-block transform skew-x-12">{sub}</span>
                         </span>
+
                       ))}
                       <span
-                        className="inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer rounded-md bg-[#cc0077]"
-                        onClick={() => { handlePinClick(data.left) }}
+                        className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 cursor-pointer rounded-md bg-[#cc0077] ${isBUSmode ? "cursor-pointer" : "cursor-not-allowed"}`}
+                        onClick={() => {
+                          if (!isBUSmode) {
+                            handlePinClick(data.left);
+                          }
+                        }}
                       >
                         <span className="inline-block text-white transform skew-x-12">{data.left}</span>
                       </span>
@@ -317,19 +530,28 @@ export default function Home() {
                   <td className={`text-left`}>
                     <div className="inline-flex items-center">
                       <span
-                        className="inline-block px-2 py-1 ml-1 cursor-pointer transform -skew-x-12 rounded-md bg-[#cc0077]"
-                        onClick={() => { handlePinClick(data.right) }}
+                        className={`inline-block px-2 py-1 ml-1  transform -skew-x-12 rounded-md bg-[#cc0077] ${isBUSmode ? "cursor-not-allowed" : "cursor-pointer"}`}
+                        onClick={() => {
+                          if (!isBUSmode) {
+                            handlePinClick(data.right);
+                          }
+                        }}
                       >
                         <span className="inline-block transform skew-x-12">{data.right}</span>
                       </span>
                       {data.rightSub.map((sub, idx) => (
                         <span
                           key={idx}
+                          onClick={() => {
+                            if (!isBUSmode) {
+                              handlesubPinClick(sub);
+                            }
+                          }}
                           className={`inline-block px-2 py-1 ml-1 transform -skew-x-12 rounded-md ${isBUSmode
                             ? validSubs.includes(sub)
-                              ? data.rightsubClass
-                              : "bg-gray-400 text-white"
-                            : data.rightsubClass
+                              ? `${data.rightsubClass} `
+                              : "bg-gray-400 text-white cursor-not-allowed"
+                            : `${data.rightsubClass} cursor-pointer`
                             }`}
                         >
                           <span className="inline-block transform skew-x-12">{sub}</span>
@@ -375,7 +597,7 @@ export default function Home() {
         <div className="flex flex-row  flex-[1_1_0%]  min-h-60 bg-gray-100 rounded-lg  shadow-md rounded-2xl m-4 relative  ">
 
           <div className="flex flex-col items-center justify-center lg:basis-1/3 ">
-            <div className="absolute top-0  justify-start items-center">
+            <div className="absolute top-8  justify-start items-center">
               <button
                 className={`px-4 py-2 rounded-md rounded-r-none ${activeTable === "P1"
                   ? "bg-[#cc0077] text-white"
@@ -398,43 +620,148 @@ export default function Home() {
             {renderActiveTable()}
           </div>
 
-          <div className="flex flex-col lg:basis-1/3 rounded-lg border border-gray-300 border-t-0 border-r-0 border-b-0 ">
-            <div className="flex  items-center mb-4 max-w-[300vh]">
-              <button className="px-3 py-1 bg-teal-600 text-white text-sm mr-[0.1rem] hover:bg-teal-700"
-                onClick={() => resetTables()}>ALL</button>
-              <button className="px-3 py-1 bg-blue-600 text-white text-sm mr-[0.1rem] hover:bg-blue-700"
-                onClick={() => handleBusMode(SYS)}>SYS</button>
-              <button className="px-3 py-1 bg-green-600 text-white text-sm mr-[0.1rem] hover:bg-green-700"
-                onClick={() => handleBusMode(USB)}>USB</button>
-              <button className="px-3 py-1 bg-yellow-500 text-black text-sm mr-[0.1rem] hover:bg-yellow-600"
-                onClick={() => handleBusMode(Analog)}>Analog</button>
+          <div className="flex flex-col lg:basis-1/3 rounded-lg border border-gray-300 border-t-0 border-r-0 border-b-0 pl-4 ">
+            <div className="flex items-center mb-4 max-w-[300vh]">
               <button
-                className="px-3 py-1 bg-purple-600 text-white text-sm mr-[0.1rem] hover:bg-purple-700"
-                onClick={() => handleBusMode(SPI)}
+                className={getButtonStyle('ALL')}
+                onClick={resetAll}
+              >
+                ALL
+              </button>
+              <button
+                className={getButtonStyle('SYS')}
+                onClick={() => handleBusMode(SYS, 'SYS')}
+              >
+                SYS
+              </button>
+              <button
+                className={getButtonStyle('USB')}
+                onClick={() => handleBusMode(USB, 'USB')}
+              >
+                USB
+              </button>
+              <button
+                className={getButtonStyle('Analog')}
+                onClick={() => handleBusMode(Analog, 'Analog')}
+              >
+                Analog
+              </button>
+              <button
+                className={getButtonStyle('SPI')}
+                onClick={() => handleBusMode(SPI, 'SPI')}
               >
                 SPI
               </button>
               <button
-                className="px-3 py-1 bg-red-600 text-white text-sm mr-[0.1rem] hover:bg-red-700"
-                onClick={() => handleBusMode(UART)}
+                className={getButtonStyle('UART')}
+                onClick={() => handleBusMode(UART, 'UART')}
               >
                 UART
               </button>
-              <button className="px-3 py-1 bg-[#FF00FF] text-white text-sm mr-[0.1rem] hover:bg-[#FF00FF]"
-                onClick={() => handleBusMode(PWM)}>PWM</button>
-
-              <button className="px-3 py-1 bg-cyan-600 text-white text-sm mr-[0.1rem] hover:bg-cyan-700"
-                onClick={() => handleBusMode(BAT)}
-              >BAT</button>
-              <button className="px-3 py-1 bg-purple-600 text-white text-sm mr-[0.1rem] hover:bg-purple-700"
-                onClick={() => handleBusMode(CAN)}
-              >CAN</button>
-              <button className="px-3 py-1 bg-[#FFD700] text-black text-sm mr-[0.1rem] hover:bg-[#FFD709]"
-                onClick={() => handleBusMode(PRU)}>PRU</button>
+              <button
+                className={getButtonStyle('PWM')}
+                onClick={() => handleBusMode(PWM, 'PWM')}
+              >
+                PWM
+              </button>
+              <button
+                className={getButtonStyle('BAT')}
+                onClick={() => handleBusMode(BAT, 'BAT')}
+              >
+                BAT
+              </button>
+              <button
+                className={getButtonStyle('CAN')}
+                onClick={() => handleBusMode(CAN, 'CAN')}
+              >
+                CAN
+              </button>
+              <button
+                className={getButtonStyle('PRU')}
+                onClick={() => handleBusMode(PRU, 'PRU')}
+              >
+                PRU
+              </button>
+              <button
+                className={getButtonStyle('I2C')}
+                onClick={() => handleBusMode(I2C, 'I2C')}
+              >
+                I2C
+              </button>
             </div>
             <h2 className="text-xl text-black font-bold mb-4">  AM6254(BALL:some) {selectedPin}</h2>
             <div className="text-black ">
-              {pinDetails ? (
+              {issubpin ? (
+                <div className="mb-4">
+                  {subpinDetails ? JSON.stringify(subpinDetails) : "No subpin details available"}
+                </div>
+              ) : isbusdetails ? (
+                // Replace the isbusdetails section in your code with this:
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold mb-2">Bus Mode: {activeMode}</h3>
+                  <div className="bg-gray-100 p-3 rounded-md">
+                    <h4 className="font-semibold mb-1">Bus Pins:</h4>
+                    <ul className="list-disc pl-5">
+                      {activeMode === 'SYS' && SYS.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'USB' && USB.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'Analog' && Analog.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'SPI' && SPI.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'UART' && UART.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'PWM' && PWM.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'BAT' && BAT.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'CAN' && CAN.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'PRU' && PRU.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                      {activeMode === 'I2C' && I2C.map(([pin, label], index) => (
+                        <li key={index} className="text-sm">
+                          <span className="font-mono">{pin}</span> as <span className="font-semibold">{label}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-sm text-gray-600">
+                      Highlighted pins in the table are part of this bus. Click "ALL" to reset.
+                    </p>
+                  </div>
+                </div>
+
+              ) : ispin && pinDetails ? (
                 <div className="mb-4">
                   <table className=" border-collapse border border-gray-300 table-fixed">
                     <thead>
@@ -497,59 +824,67 @@ export default function Home() {
                     </tbody>
 
                   </table>
-                  <div className="font-bold">
-                    MSPM0C1103
-                  </div>
-                  {["Mspm0mode", "Mspm1mode"]
-                    .filter(label => {
-                      // Only show row if any pin has a value for this label
-                      return Object.keys(pinDetails).some(pin => {
+                  {(() => {
+                    const availableModes = ["Mspm0mode", "Mspm1mode"].filter(label =>
+                      Object.keys(pinDetails).some(pin => {
                         if (pins[selectedPin]) {
                           const firstSignal = Object.keys(pins[selectedPin])[0];
-                          const modeValue = getPinModes(selectedPin, firstSignal)[label];
+                          const modeValue = getPinModes(selectedPin, firstSignal)?.[label];
                           return modeValue && modeValue.trim() !== "";
                         }
                         return false;
-                      });
-                    })
-                    .map(label => (
-                      <tr key={label} className="text-center">
-                        <td className="font-bold xl:text-[12px] 2xl:text-sm whitespace-nowrap">
-                          {label}
-                        </td>
-                        {Object.keys(pinDetails)
-                          .filter(pin => {
-                            if (pins[selectedPin]) {
-                              const signalKeys = Object.keys(pins[selectedPin]);
-                              const signal = signalKeys[Object.keys(pinDetails).indexOf(pin)];
-                              const modeValue = getPinModes(selectedPin, signal)?.[label];
-                              return modeValue && modeValue.trim() !== "";
-                            }
-                            return false;
-                          })
-                          .map((pin, i) => {
-                            let modeValue = "";
-                            if (pins[selectedPin]) {
-                              const signalKeys = Object.keys(pins[selectedPin]);
-                              const signal = signalKeys[Object.keys(pinDetails).indexOf(pin)];
-                              modeValue = getPinModes(selectedPin, signal)?.[label] || "";
-                            }
-                            return (
-                              <td
-                                key={`${pin}-${label}`}
-                                className="border border-gray-300 text-xs whitespace-nowrap overflow-hidden xl:text-[8px] 2xl:text-sm text-ellipsis"
-                              >
-                                <button
-                                  className="px-2 py-1 bg-blue-500 text-white hover:bg-blue-600 w-full text-xs"
-                                  onClick={() => updatePinSub1(selectedPin, modeValue)}
-                                >
-                                  {modeValue}
-                                </button>
-                              </td>
-                            );
-                          })}
-                      </tr>
-                    ))}
+                      })
+                    );
+
+                    if (availableModes.length === 0) return null;
+
+                    return (
+                      <>
+                        <div className="font-bold">MSPM0C1103</div>
+
+                        {availableModes.map(label => (
+                          <tr key={label} className="text-center">
+                            <td className="font-bold xl:text-[12px] 2xl:text-sm whitespace-nowrap">
+                              {label}
+                            </td>
+                            {Object.keys(pinDetails)
+                              .filter(pin => {
+                                if (pins[selectedPin]) {
+                                  const signalKeys = Object.keys(pins[selectedPin]);
+                                  const signal = signalKeys[Object.keys(pinDetails).indexOf(pin)];
+                                  const modeValue = getPinModes(selectedPin, signal)?.[label];
+                                  return modeValue && modeValue.trim() !== "";
+                                }
+                                return false;
+                              })
+                              .map(pin => {
+                                let modeValue = "";
+                                if (pins[selectedPin]) {
+                                  const signalKeys = Object.keys(pins[selectedPin]);
+                                  const signal = signalKeys[Object.keys(pinDetails).indexOf(pin)];
+                                  modeValue = getPinModes(selectedPin, signal)?.[label] || "";
+                                }
+                                return (
+                                  <td
+                                    key={`${pin}-${label}`}
+                                    className="border border-gray-300 text-xs whitespace-nowrap overflow-hidden xl:text-[8px] 2xl:text-sm text-ellipsis"
+                                  >
+                                    <button
+                                      className="px-2 py-1 bg-blue-500 text-white hover:bg-blue-600 w-full text-xs"
+                                      onClick={() => updatePinSub1(selectedPin, modeValue)}
+                                    >
+                                      {modeValue}
+                                    </button>
+                                  </td>
+                                );
+                              })}
+                          </tr>
+                        ))}
+                      </>
+                    );
+                  })()}
+
+
 
                 </div>
               ) : (
@@ -560,6 +895,35 @@ export default function Home() {
                 </div>
               )}
             </div>
+
+          </div>
+          <div className="flex flex-col lg:basis-1/3 rounded-lg border border-gray-300 border-t-0 border-r-0 border-b-0 px-4">
+            {/* <button
+              className="px-3 py-1 bg-gray-600 text-white text-sm mr-[0.1rem] hover:bg-gray-700"
+              onClick={generatePinArrays}
+            >
+              Generate Arrays
+            </button> */}
+            {generatedOutput && (
+              <div className="mt-4">
+                <h3 className="font-bold text-black mb-2">Generated Pin Arrays:</h3>
+                <textarea
+                  className="w-full h-40 p-2 bg-gray-100 text-black font-mono text-xs border border-gray-300 rounded"
+                  value={generatedOutput}
+                  readOnly
+                  onClick={(e) => e.currentTarget.select()}
+                />
+                <button
+                  className="mt-2 px-3 py-1 bg-blue-500 text-white text-sm hover:bg-blue-600"
+                  onClick={() => {
+                    navigator.clipboard.writeText(generatedOutput);
+                    alert("Copied to clipboard!");
+                  }}
+                >
+                  Copy to Clipboard
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </main>
