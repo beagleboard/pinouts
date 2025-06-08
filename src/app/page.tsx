@@ -129,6 +129,8 @@ export default function Home() {
 
   const handleBusMode = (busData: string[][], modeName: string) => {
     resetTables();
+    setsubpin(false);
+    setpin(false);
     busData.forEach(([pin, label]) => updatePin(pin, label));
     setBUSmode(true);
     setValidSubs(busData.map(([, label]) => label));
