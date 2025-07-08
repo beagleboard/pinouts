@@ -1,570 +1,1340 @@
 pins:
   P2.01:
     GPIO0_86:
-      description: ""
-      mode0: "MCASP0_ACLKX"
-      mode1: "SPI2_CS1"
-      mode2: "ECAP2_IN_APWM_OUT"
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO1_11"
-      mode8: "EQEP1_A"
+      description: "General Purpose I/O"
+      mode0:
+        function: "MCASP0_ACLKX"
+        description: "MCASP0 Transmit Bit Clock"
+      mode1:
+        function: "SPI2_CS1"
+        description: "SPI2 Chip Select 1"
+      mode2:
+        function: "ECAP2_IN_APWM_OUT"
+        description: "Enhanced Capture 2 Input / Auxiliary PWM Output"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO1_11"
+        description: "General Purpose I/O"
+      mode8:
+        function: "EQEP1_A"
+        description: "Enhanced QEP1 Input A"
     GPIO1_11:
-      description: ""
-      mode0: "MDIO0_MDC"
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO0_86"
-      mode8: ""
+      description: "General Purpose I/O"
+      mode0:
+        function: "MDIO0_MDC"
+        description: "MDIO Management Data Clock"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO0_86"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.02:
-    GPIO0_45:
-      description: ""
-      mode0: "VOUT0_DATA0"
-      mode1: "GPMC0_A0"
-      mode2: "PR0_PRU1_GPO0"
-      mode3: "PR0_PRU1_GPI0"
-      mode4: "UART2_RXD"
-      mode5: "PR0_PRU0_GPO8"
-      mode6: "PR0_PRU0_GPI8"
-      mode7: "GPIO0_45"
-      mode8: ""
+    GPIO0_45(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA0"
+        description: "Video Output Data 0"
+      mode1:
+        function: "GPMC0_A0"
+        description: "GPMC Address 0 Output"
+      mode2:
+        function: "PR0_PRU1_GPO0"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI0"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART2_RXD"
+        description: "UART2 Receive Data"
+      mode5:
+        function: "PR0_PRU0_GPO8"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI8"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_45"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.03:
-    GPIO0_85:
-      description: ""
-      mode0: "MDIO0_MDIO"
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO0_85"
-      mode8: ""
+    GPIO0_85(PWM):
+      description: "General Purpose I/O"
+      mode0:
+        function: "MDIO0_MDIO"
+        description: "MDIO Management Data I/O"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO0_85"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
     GPIO1_9:
-      description: ""
-      mode0: "MCASP0_AXR1"
-      mode1: "SPI2_CS2"
-      mode2: "ECAP1_IN_APWM_OUT"
-      mode3: ""
-      mode4: ""
-      mode5: "PR0_UART0_RXD"
-      mode6: "EHRPWM1_A"
-      mode7: "GPIO1_9"
-      mode8: "EQEP0_S"
+      description: "General Purpose I/O"
+      mode0:
+        function: "MCASP0_AXR1"
+        description: "MCASP0 Serial Data 1"
+      mode1:
+        function: "SPI2_CS2"
+        description: "SPI2 Chip Select 2"
+      mode2:
+        function: "ECAP1_IN_APWM_OUT"
+        description: "Enhanced Capture 1 Input / Auxiliary PWM Output"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: "PR0_UART0_RXD"
+        description: "PRU UART0 Receive Data"
+      mode6:
+        function: "EHRPWM1_A"
+        description: "Enhanced HRPWM1 Output A"
+      mode7:
+        function: "GPIO1_9"
+        description: "General Purpose I/O"
+      mode8:
+        function: "EQEP0_S"
+        description: "Enhanced QEP0 Strobe Input"
   P2.04:
-    GPIO0_46:
-      description: ""
-      mode0: "VOUT0_DATA1"
-      mode1: "GPMC0_A1"
-      mode2: "PR0_PRU1_GPO1"
-      mode3: "PR0_PRU1_GPI1"
-      mode4: "UART2_TXD"
-      mode5: "PR0_PRU0_GPO9"
-      mode6: "PR0_PRU0_GPI9"
-      mode7: "GPIO0_46"
-      mode8: ""
+    GPIO0_46(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA1"
+        description: "Video Output Data 1"
+      mode1:
+        function: "GPMC0_A1"
+        description: "GPMC Address 1 Output"
+      mode2:
+        function: "PR0_PRU1_GPO1"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI1"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART2_TXD"
+        description: "UART2 Transmit Data"
+      mode5:
+        function: "PR0_PRU0_GPO9"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI9"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_46"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.05:
     MCU_GPIO0_5:
-      description: ""
-      mode0: "MCU_UART0_RXD"
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "MCU_GPIO0_5"
-      mode8: ""
+      description: "MCU General Purpose I/O"
+      mode0:
+        function: "MCU_UART0_RXD"
+        description: "MCU UART0 Receive Data"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "MCU_GPIO0_5"
+        description: "MCU General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
     GPIO1_24:
-      description: ""
-      mode0: "MCAN0_TX"
-      mode1: "UART5_RXD"
-      mode2: "TIMER_IO2"
-      mode3: "SYNC2_OUT"
-      mode4: "UART1_DTRn"
-      mode5: "EQEP2_I"
-      mode6: "PR0_UART0_RXD"
-      mode7: "GPIO1_24"
-      mode8: "MCASP2_AXR0"
-      mode9: "EHRPWM_TZn_IN3"
+      description: "General Purpose I/O"
+      mode0:
+        function: "MCAN0_TX"
+        description: "MCAN0 Transmit"
+      mode1:
+        function: "UART5_RXD"
+        description: "UART5 Receive Data"
+      mode2:
+        function: "TIMER_IO2"
+        description: "Timer I/O 2"
+      mode3:
+        function: "SYNC2_OUT"
+        description: "Synchronization Output 2"
+      mode4:
+        function: "UART1_DTRn"
+        description: "UART1 Data Terminal Ready (active low)"
+      mode5:
+        function: "EQEP2_I"
+        description: "Enhanced QEP2 Index Input"
+      mode6:
+        function: "PR0_UART0_RXD"
+        description: "PRU UART0 Receive Data"
+      mode7:
+        function: "GPIO1_24"
+        description: "General Purpose I/O"
+      mode8:
+        function: "MCASP2_AXR0"
+        description: "MCASP2 Serial Data 0"
+      mode9:
+        function: "EHRPWM_TZn_IN3"
+        description: "Enhanced HRPWM Trip Zone Input 3"
   P2.06:
-    GPIO0_47:
-      description: ""
-      mode0: "VOUT0_DATA2"
-      mode1: "GPMC0_A2"
-      mode2: "PR0_PRU1_GPO2"
-      mode3: "PR0_PRU1_GPI2"
-      mode4: "UART3_RXD"
-      mode5: "PR0_PRU0_GPO10"
-      mode6: "PR0_PRU0_GPI10"
-      mode7: "GPIO0_47"
-      mode8: ""
+    GPIO0_47(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA2"
+        description: "Video Output Data 2"
+      mode1:
+        function: "GPMC0_A2"
+        description: "GPMC Address 2 Output"
+      mode2:
+        function: "PR0_PRU1_GPO2"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI2"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART3_RXD"
+        description: "UART3 Receive Data"
+      mode5:
+        function: "PR0_PRU0_GPO10"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI10"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_47"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.07:
     MCU_GPIO0_6:
-      description: ""
-      mode0: "MCU_UART0_TXD"
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "MCU_GPIO0_6"
-      mode8: ""
+      description: "MCU General Purpose I/O"
+      mode0:
+        function: "MCU_UART0_TXD"
+        description: "MCU UART0 Transmit Data"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "MCU_GPIO0_6"
+        description: "MCU General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
     GPIO1_25:
-      description: ""
-      mode0: "MCAN0_RX"
-      mode1: "UART5_TXD"
-      mode2: "TIMER_IO3"
-      mode3: "SYNC3_OUT"
-      mode4: "UART1_RIn"
-      mode5: "EQEP2_S"
-      mode6: "PR0_UART0_TXD"
-      mode7: "GPIO1_25"
-      mode8: "MCASP2_AXR1"
-      mode9: "EHRPWM_TZn_IN4"
+      description: "General Purpose I/O"
+      mode0:
+        function: "MCAN0_RX"
+        description: "MCAN0 Receive"
+      mode1:
+        function: "UART5_TXD"
+        description: "UART5 Transmit Data"
+      mode2:
+        function: "TIMER_IO3"
+        description: "Timer I/O 3"
+      mode3:
+        function: "SYNC3_OUT"
+        description: "Synchronization Output 3"
+      mode4:
+        function: "UART1_RIn"
+        description: "UART1 Ring Indicator (active low)"
+      mode5:
+        function: "EQEP2_S"
+        description: "Enhanced QEP2 Strobe Input"
+      mode6:
+        function: "PR0_UART0_TXD"
+        description: "PRU UART0 Transmit Data"
+      mode7:
+        function: "GPIO1_25"
+        description: "General Purpose I/O"
+      mode8:
+        function: "MCASP2_AXR1"
+        description: "MCASP2 Serial Data 1"
+      mode9:
+        function: "EHRPWM_TZn_IN4"
+        description: "Enhanced HRPWM Trip Zone Input 4"
   P2.08:
     GPIO0_48:
-      description: ""
-      mode0: "VOUT0_DATA3"
-      mode1: "GPMC0_A3"
-      mode2: "PR0_PRU1_GPO3"
-      mode3: "PR0_PRU1_GPI3"
-      mode4: "UART3_TXD"
-      mode5: "PR0_PRU0_GPO11"
-      mode6: "PR0_PRU0_GPI11"
-      mode7: "GPIO0_48"
-      mode8: ""
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA3"
+        description: "Video Output Data 3"
+      mode1:
+        function: "GPMC0_A3"
+        description: "GPMC Address 3 Output"
+      mode2:
+        function: "PR0_PRU1_GPO3"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI3"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART3_TXD"
+        description: "UART3 Transmit Data"
+      mode5:
+        function: "PR0_PRU0_GPO11"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI11"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_48"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.09:
-    MCU_GPIO0_16:
-      description: ""
-      mode0: "MCU_MCAN1_RX"
-      mode1: "MCU_TIMER_IO3"
-      mode2: "MCU_SPI0_CS2"
-      mode3: "MCU_SPI1_CS2"
-      mode4: "MCU_SPI1_CLK"
-      mode5: ""
-      mode6: ""
-      mode7: "MCU_GPIO0_16"
-      mode8: ""
+    MCU_GPIO0_16(CAN):
+      description: "MCU General Purpose I/O"
+      mode0:
+        function: "MCU_MCAN1_RX"
+        description: "MCU MCAN1 Receive"
+      mode1:
+        function: "MCU_TIMER_IO3"
+        description: "MCU Timer I/O 3"
+      mode2:
+        function: "MCU_SPI0_CS2"
+        description: "MCU SPI0 Chip Select 2"
+      mode3:
+        function: "MCU_SPI1_CS2"
+        description: "MCU SPI1 Chip Select 2"
+      mode4:
+        function: "MCU_SPI1_CLK"
+        description: "MCU SPI1 Clock"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "MCU_GPIO0_16"
+        description: "MCU General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
     GPIO1_22:
-      description: ""
-      mode0: "UART0_CTSn"
-      mode1: "SPI0_CS2"
-      mode2: "I2C3_SCL"
-      mode3: "UART2_RXD"
-      mode4: "TIMER_IO6"
-      mode5: "AUDIO_EXT_REFCLK0"
-      mode6: "PR0_ECAP0_SYNC_OUT"
-      mode7: "GPIO1_22"
-      mode8: "MCASP2_AFSX"
-      mode9: "MMC2_SDCD"
+      description: "General Purpose I/O"
+      mode0:
+        function: "UART0_CTSn"
+        description: "UART0 Clear to Send (active low)"
+      mode1:
+        function: "SPI0_CS2"
+        description: "SPI0 Chip Select 2"
+      mode2:
+        function: "I2C3_SCL"
+        description: "I2C3 Clock"
+      mode3:
+        function: "UART2_RXD"
+        description: "UART2 Receive Data"
+      mode4:
+        function: "TIMER_IO6"
+        description: "Timer I/O 6"
+      mode5:
+        function: "AUDIO_EXT_REFCLK0"
+        description: "Audio External Reference Clock 0"
+      mode6:
+        function: "PR0_ECAP0_SYNC_OUT"
+        description: "PRU ECAP0 Sync Output"
+      mode7:
+        function: "GPIO1_22"
+        description: "General Purpose I/O"
+      mode8:
+        function: "MCASP2_AFSX"
+        description: "MCASP2 Frame Sync"
+      mode9:
+        function: "MMC2_SDCD"
+        description: "MMC2 Card Detect"
   P2.10:
     GPIO0_91:
-      description: ""
-      mode0: "RGMII2_TD2"
-      mode1: ""
-      mode2: "MCASP2_AFSX"
-      mode3: "PR0_PRU1_GPO4"
-      mode4: "PR0_ECAP0_IN_APWM_OUTPR0_PRU1_GPI4"
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO0_91"
-      mode8: "EQEP2_I"
+      description: "General Purpose I/O"
+      mode0:
+        function: "RGMII2_TD2"
+        description: "RGMII2 Transmit Data 2"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: "MCASP2_AFSX"
+        description: "MCASP2 Frame Sync"
+      mode3:
+        function: "PR0_PRU1_GPO4"
+        description: "PRUSS PRU Data Output"
+      mode4:
+        function: "PR0_ECAP0_IN_APWM_OUT"
+        description: "PRU ECAP0 Input / Auxiliary PWM Output"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO0_91"
+        description: "General Purpose I/O"
+      mode8:
+        function: "EQEP2_I"
+        description: "Enhanced QEP2 Index Input"
   P2.11:
-    MCU_GPIO0_15:
-      description: ""
-      mode0: "MCU_MCAN1_TX"
-      mode1: "MCU_TIMER_IO2"
-      mode2: ""
-      mode3: "MCU_SPI1_CS1"
-      mode4: "MCU_EXT_REFCLK0"
-      mode5: ""
-      mode6: ""
-      mode7: "MCU_GPIO0_15"
-      mode8: ""
+    MCU_GPIO0_15(CAN):
+      description: "MCU General Purpose I/O"
+      mode0:
+        function: "MCU_MCAN1_TX"
+        description: "MCU MCAN1 Transmit"
+      mode1:
+        function: "MCU_TIMER_IO2"
+        description: "MCU Timer I/O 2"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: "MCU_SPI1_CS1"
+        description: "MCU SPI1 Chip Select 1"
+      mode4:
+        function: "MCU_EXT_REFCLK0"
+        description: "MCU External Reference Clock 0"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "MCU_GPIO0_15"
+        description: "MCU General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
     GPIO1_23:
-      description: ""
-      mode0: "UART0_RTSn"
-      mode1: "SPI0_CS3"
-      mode2: "I2C3_SDA"
-      mode3: "UART2_TXD"
-      mode4: "TIMER_IO7"
-      mode5: "AUDIO_EXT_REFCLK1"
-      mode6: "PR0_ECAP0_IN_APWM_OUT"
-      mode7: "GPIO1_23"
-      mode8: "MCASP2_ACLKX"
-      mode9: "MMC2_SDWP"
+      description: "General Purpose I/O"
+      mode0:
+        function: "UART0_RTSn"
+        description: "UART0 Ready to Send (active low)"
+      mode1:
+        function: "SPI0_CS3"
+        description: "SPI0 Chip Select 3"
+      mode2:
+        function: "I2C3_SDA"
+        description: "I2C3 Data"
+      mode3:
+        function: "UART2_TXD"
+        description: "UART2 Transmit Data"
+      mode4:
+        function: "TIMER_IO7"
+        description: "Timer I/O 7"
+      mode5:
+        function: "AUDIO_EXT_REFCLK1"
+        description: "Audio External Reference Clock 1"
+      mode6:
+        function: "PR0_ECAP0_IN_APWM_OUT"
+        description: "PRU ECAP0 Input / Auxiliary PWM Output"
+      mode7:
+        function: "GPIO1_23"
+        description: "General Purpose I/O"
+      mode8:
+        function: "MCASP2_ACLKX"
+        description: "MCASP2 Transmit Bit Clock"
+      mode9:
+        function: "MMC2_SDWP"
+        description: "MMC2 Write Protect"
   P2.12:
-    PWR_BTN:
-      description: "PWR.BTN"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+    PWR_BTN(SYS,PRU):
+      description: "Power Button"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.13:
-    VOUT_VSYS:
-      description: "VOUT - VSYS"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+    VOUT_VSYS(SYS):
+      description: "Video Output System Voltage"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.14:
     VBAT:
-      description: "VBAT"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+      description: "Battery Voltage"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.15:
     GND:
-      description: "GND"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+      description: "Ground"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.16:
     BAT_TEMP:
-      description: "BAT.TEMP - BAT_TS"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+      description: "Battery Temperature Sensor"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.17:
     GPIO0_64:
-      description: ""
-      mode0: "VOUT0_PCLK"
-      mode1: "GPMC0_A19"
-      mode2: "PR0_PRU1_GPO19"
-      mode3: "PR0_PRU1_GPI19"
-      mode4: "UART2_CTSn"
-      mode5: "PR0_PRU0_GPO19"
-      mode6: "PR0_PRU0_GPI19"
-      mode7: "GPIO0_64"
-      mode8: "PR0_ECAP0_IN_APWM_OUT"
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_PCLK"
+        description: "Video Output Pixel Clock"
+      mode1:
+        function: "GPMC0_A19"
+        description: "GPMC Address 19 Output"
+      mode2:
+        function: "PR0_PRU1_GPO19"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI19"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART2_CTSn"
+        description: "UART2 Clear to Send (active low)"
+      mode5:
+        function: "PR0_PRU0_GPO19"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI19"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_64"
+        description: "General Purpose I/O"
+      mode8:
+        function: "PR0_ECAP0_IN_APWM_OUT"
+        description: "PRU ECAP0 Input / Auxiliary PWM Output"
   P2.18:
-    GPIO0_53:
-      description: ""
-      mode0: "VOUT0_DATA8"
-      mode1: "GPMC0_A8"
-      mode2: "PR0_PRU1_GPO16"
-      mode3: "PR0_PRU1_GPI16"
-      mode4: "UART6_RXD"
-      mode5: "PR0_PRU0_GPO17"
-      mode6: "PR0_PRU0_GPI17"
-      mode7: "GPIO0_53"
-      mode8: ""
+    GPIO0_53(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA8"
+        description: "Video Output Data 8"
+      mode1:
+        function: "GPMC0_A8"
+        description: "GPMC Address 8 Output"
+      mode2:
+        function: "PR0_PRU1_GPO16"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI16"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART6_RXD"
+        description: "UART6 Receive Data"
+      mode5:
+        function: "PR0_PRU0_GPO17"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI17"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_53"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.19:
     GPIO1_0:
-      description: ""
-      mode0: "RGMII2_TD3"
-      mode1: ""
-      mode2: "MCASP2_ACLKX"
-      mode3: "PR0_PRU1_GPO16"
-      mode4: "PR0_PRU1_GPI16"
-      mode5: "PR0_ECAP0_SYNC_OUT"
-      mode6: "PR0_UART0_CTSn"
-      mode7: "GPIO1_0"
-      mode8: "EQEP2_S"
+      description: "General Purpose I/O"
+      mode0:
+        function: "RGMII2_TD3"
+        description: "RGMII2 Transmit Data 3"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: "MCASP2_ACLKX"
+        description: "MCASP2 Transmit Bit Clock"
+      mode3:
+        function: "PR0_PRU1_GPO16"
+        description: "PRUSS PRU Data Output"
+      mode4:
+        function: "PR0_PRU1_GPI16"
+        description: "PRUSS PRU Data Input"
+      mode5:
+        function: "PR0_ECAP0_SYNC_OUT"
+        description: "PRU ECAP0 Sync Output"
+      mode6:
+        function: "PR0_UART0_CTSn"
+        description: "PRU UART0 Clear to Send (active low)"
+      mode7:
+        function: "GPIO1_0"
+        description: "General Purpose I/O"
+      mode8:
+        function: "EQEP2_S"
+        description: "Enhanced QEP2 Strobe Input"
   P2.20:
     GPIO0_49:
-      description: ""
-      mode0: "VOUT0_DATA4"
-      mode1: "GPMC0_A4"
-      mode2: "PR0_PRU1_GPO4"
-      mode3: "PR0_PRU1_GPI4"
-      mode4: "UART4_RXD"
-      mode5: "PR0_PRU0_GPO12"
-      mode6: "PR0_PRU0_GPI12"
-      mode7: "GPIO0_49"
-      mode8: ""
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA4"
+        description: "Video Output Data 4"
+      mode1:
+        function: "GPMC0_A4"
+        description: "GPMC Address 4 Output"
+      mode2:
+        function: "PR0_PRU1_GPO4"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI4"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART4_RXD"
+        description: "UART4 Receive Data"
+      mode5:
+        function: "PR0_PRU0_GPO12"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI12"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_49"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.21:
     GND:
-      description: "GND"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+      description: "Ground"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.22:
-    GPI00_63:
-      description: ""
-      mode0: "VOUT0_VSYNC"
-      mode1: "GPMC0_A18"
-      mode2: "PR0_PRU1_GPO18"
-      mode3: "PR0_PRU1_GPI18"
-      mode4: "UART2_RTSn"
-      mode5: "PR0_PRU0_GPO18"
-      mode6: "PR0_PRU0_GPI18"
-      mode7: "GPIO0_63"
-      mode8: ""
+    GPI00_63(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_VSYNC"
+        description: "Video Output Vertical Sync"
+      mode1:
+        function: "GPMC0_A18"
+        description: "GPMC Address 18 Output"
+      mode2:
+        function: "PR0_PRU1_GPO18"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI18"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART2_RTSn"
+        description: "UART2 Ready to Send (active low)"
+      mode5:
+        function: "PR0_PRU0_GPO18"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI18"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_63"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.23:
-    VDD_3V3:
-      description: "VDD_3V3"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+    VDD_3V3(SYS):
+      description: "3.3V Power Supply"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.24:
-    GPIO0_51:
-      description: ""
-      mode0: "VOUT0_DATA6"
-      mode1: "GPMC0_A6"
-      mode2: "PR0_PRU1_GPO6"
-      mode3: "PR0_PRU1_GPI6"
-      mode4: "UART5_RXD"
-      mode5: "PR0_PRU0_GPO14"
-      mode6: "PR0_PRU0_GPI14"
-      mode7: "GPIO0_51"
-      mode8: ""
+    GPIO0_51(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA6"
+        description: "Video Output Data 6"
+      mode1:
+        function: "GPMC0_A6"
+        description: "GPMC Address 6 Output"
+      mode2:
+        function: "PR0_PRU1_GPO6"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI6"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART5_RXD"
+        description: "UART5 Receive Data"
+      mode5:
+        function: "PR0_PRU0_GPO14"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI14"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_51"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.25:
     GPIO1_19:
-      description: ""
-      mode0: "SPI0_D1"
-      mode1: "CP_GEMAC_CPTS0_HW2TSPUSH"
-      mode2: "EHRPWM_TZn_IN0"
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO1_19"
-      mode8: ""
+      description: "General Purpose I/O"
+      mode0:
+        function: "SPI0_D1"
+        description: "SPI0 Data 1"
+      mode1:
+        function: "CP_GEMAC_CPTS0_HW2TSPUSH"
+        description: "CPTS Hardware 2 Timestamp Push"
+      mode2:
+        function: "EHRPWM_TZn_IN0"
+        description: "Enhanced HRPWM Trip Zone Input 0"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO1_19"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.26:
-    nRESET:
-      description: "RESET# - nRESET"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+    nRESET(SYS):
+      description: "System Reset (active low)"
+      mode0:
+        function: ""
+        description: "NA"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: ""
+        description: "NA"
+      mode8:
+        function: ""
+        description: "NA"
   P2.27:
     GPIO1_18:
-      description: ""
-      mode0: "SPI0_D0"
-      mode1: "CP_GEMAC_CPTS0_HW1TSPUSH"
-      mode2: "EHRPWM1_B"
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO1_18"
-      mode8: ""
+      description: "General Purpose I/O"
+      mode0:
+        function: "SPI0_D0"
+        description: "SPI0 Data 0"
+      mode1:
+        function: "CP_GEMAC_CPTS0_HW1TSPUSH"
+        description: "CPTS Hardware 1 Timestamp Push"
+      mode2:
+        function: "EHRPWM1_B"
+        description: "Enhanced HRPWM1 Output B"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO1_18"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.28:
-    GPIO0_61:
-      description: ""
-      mode0: "VOUT0_HSYNC"
-      mode1: "GPMC0_A16"
-      mode2: "PR0_PRU1_GPO15"
-      mode3: "PR0_PRU1_GPI15"
-      mode4: "UART3_RTSn"
-      mode5: "PR0_PRU0_GPO6"
-      mode6: "PR0_PRU0_GPI6"
-      mode7: "GPIO0_61"
-      mode8: ""
+    GPIO0_61(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_HSYNC"
+        description: "Video Output Horizontal Sync"
+      mode1:
+        function: "GPMC0_A16"
+        description: "GPMC Address 16 Output"
+      mode2:
+        function: "PR0_PRU1_GPO15"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI15"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART3_RTSn"
+        description: "UART3 Ready to Send (active low)"
+      mode5:
+        function: "PR0_PRU0_GPO6"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI6"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_61"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.29:
     GPIO0_40:
-      description: ""
-      mode0: "GPMC0_DIR"
-      mode1: "PR0_ECAP0_IN_APWM_OUT"
-      mode2: ""
-      mode3: "MCASP2_AXR13"
-      mode4: "PR0_PRU0_GPO16"
-      mode5: "PR0_PRU0_GPI16"
-      mode6: "TRC_DATA14"
-      mode7: "GPIO0_40"
-      mode8: "EQEP2_S"
+      description: "General Purpose I/O"
+      mode0:
+        function: "GPMC0_DIR"
+        description: "GPMC Direction Control"
+      mode1:
+        function: "PR0_ECAP0_IN_APWM_OUT"
+        description: "PRU ECAP0 Input / Auxiliary PWM Output"
+      mode2:
+        function: ""
+        description: "NA"
+      mode3:
+        function: "MCASP2_AXR13"
+        description: "MCASP2 Serial Data 13"
+      mode4:
+        function: "PR0_PRU0_GPO16"
+        description: "PRUSS PRU Data Output"
+      mode5:
+        function: "PR0_PRU0_GPI16"
+        description: "PRUSS PRU Data Input"
+      mode6:
+        function: "TRC_DATA14"
+        description: "Trace Data 14"
+      mode7:
+        function: "GPIO0_40"
+        description: "General Purpose I/O"
+      mode8:
+        function: "EQEP2_S"
+        description: "Enhanced QEP2 Strobe Input"
     GPIO1_17:
-      description: ""
-      mode0: "SPI0_CLK"
-      mode1: "CP_GEMAC_CPTS0_TS_SYNC"
-      mode2: "EHRPWM1_A"
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO1_17"
-      mode8: ""
+      description: "General Purpose I/O"
+      mode0:
+        function: "SPI0_CLK"
+        description: "SPI0 Clock"
+      mode1:
+        function: "CP_GEMAC_CPTS0_TS_SYNC"
+        description: "CPTS Time Sync Signal"
+      mode2:
+        function: "EHRPWM1_A"
+        description: "Enhanced HRPWM1 Output A"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO1_17"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.30:
-    GPIO0_58:
-      description: ""
-      mode0: "VOUT0_DATA13"
-      mode1: "GPMC0_A13"
-      mode2: "PR0_PRU1_GPO12"
-      mode3: "PR0_PRU1_GPI12"
-      mode4: "UART5_CTSn"
-      mode5: "PR0_PRU0_GPO3"
-      mode6: "PR0_PRU0_GPI3"
-      mode7: "GPIO0_58"
-      mode8: ""
+    GPIO0_58(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA13"
+        description: "Video Output Data 13"
+      mode1:
+        function: "GPMC0_A13"
+        description: "GPMC Address 13 Output"
+      mode2:
+        function: "PR0_PRU1_GPO12"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI12"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART5_CTSn"
+        description: "UART5 Clear to Send (active low)"
+      mode5:
+        function: "PR0_PRU0_GPO3"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI3"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_58"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.31:
-    GPIO0_90:
-      description: ""
-      mode0: "RGMII2_TD1"
-      mode1: "RMII2_TXD1"
-      mode2: "MCASP2_ACLKR"
-      mode3: "PR0_PRU1_GPO3"
-      mode4: "PR0_PRU1_GPI3"
-      mode5: "MCASP2_AXR8"
-      mode6: ""
-      mode7: "GPIO0_90"
-      mode8: ""
+    GPIO0_90(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "RGMII2_TD1"
+        description: "RGMII2 Transmit Data 1"
+      mode1:
+        function: "RMII2_TXD1"
+        description: "RMII2 Transmit Data 1"
+      mode2:
+        function: "MCASP2_ACLKR"
+        description: "MCASP2 Receive Bit Clock"
+      mode3:
+        function: "PR0_PRU1_GPO3"
+        description: "PRUSS PRU Data Output"
+      mode4:
+        function: "PR0_PRU1_GPI3"
+        description: "PRUSS PRU Data Input"
+      mode5:
+        function: "MCASP2_AXR8"
+        description: "MCASP2 Serial Data 8"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO0_90"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
     GPIO1_15:
-      description: ""
-      mode0: "SPI0_CS0"
-      mode1: ""
-      mode2: "EHRPWM0_A"
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: "PR0_ECAP0_SYNC_IN"
-      mode7: "GPIO1_15"
-      mode8: ""
+      description: "General Purpose I/O"
+      mode0:
+        function: "SPI0_CS0"
+        description: "SPI0 Chip Select 0"
+      mode1:
+        function: ""
+        description: "NA"
+      mode2:
+        function: "EHRPWM0_A"
+        description: "Enhanced HRPWM0 Output A"
+      mode3:
+        function: ""
+        description: "NA"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: "PR0_ECAP0_SYNC_IN"
+        description: "PRU ECAP0 Sync Input"
+      mode7:
+        function: "GPIO1_15"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.32:
-    GPI00_57:
-      description: ""
-      mode0: "VOUT0_DATA12"
-      mode1: "GPMC0_A12"
-      mode2: "PR0_PRU1_GPO11"
-      mode3: "PR0_PRU1_GPI11"
-      mode4: "UART5_RTSn"
-      mode5: "PR0_PRU0_GPO2"
-      mode6: "PR0_PRU0_GPI2"
-      mode7: "GPIO0_57"
-      mode8: ""
+    GPI00_57(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA12"
+        description: "Video Output Data 12"
+      mode1:
+        function: "GPMC0_A12"
+        description: "GPMC Address 12 Output"
+      mode2:
+        function: "PR0_PRU1_GPO11"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI11"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART5_RTSn"
+        description: "UART5 Ready to Send (active low)"
+      mode5:
+        function: "PR0_PRU0_GPO2"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI2"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_57"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.33:
-    GPIO0_52:
-      description: ""
-      mode0: "VOUT0_DATA7"
-      mode1: "GPMC0_A7"
-      mode2: "PR0_PRU1_GPO7"
-      mode3: "PR0_PRU1_GPI7"
-      mode4: "UART5_TXD"
-      mode5: "PR0_PRU0_GPO15"
-      mode6: "PR0_PRU0_GPI15"
-      mode7: "GPIO0_52"
-      mode8: ""
+    GPIO0_52(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA7"
+        description: "Video Output Data 7"
+      mode1:
+        function: "GPMC0_A7"
+        description: "GPMC Address 7 Output"
+      mode2:
+        function: "PR0_PRU1_GPO7"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI7"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART5_TXD"
+        description: "UART5 Transmit Data"
+      mode5:
+        function: "PR0_PRU0_GPO15"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI15"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_52"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.34:
-    GPIO0_60:
-      description: ""
-      mode0: "VOUT0_DATA15"
-      mode1: "GPMC0_A15"
-      mode2: "PR0_PRU1_GPO14"
-      mode3: "PR0_PRU1_GPI14"
-      mode4: "UART4_CTSn"
-      mode5: "PR0_PRU0_GPO5"
-      mode6: "PR0_PRU0_GPI5"
-      mode7: "GPIO0_60"
-      mode8: ""
+    GPIO0_60(PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA15"
+        description: "Video Output Data 15"
+      mode1:
+        function: "GPMC0_A15"
+        description: "GPMC Address 15 Output"
+      mode2:
+        function: "PR0_PRU1_GPO14"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI14"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART4_CTSn"
+        description: "UART4 Clear to Send (active low)"
+      mode5:
+        function: "PR0_PRU0_GPO5"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI5"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_60"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
   P2.35:
-    GPIO0_54:
-      description: ""
-      mode0: "VOUT0_DATA9"
-      mode1: "GPMC0_A9"
-      mode2: "PR0_PRU1_GPO8"
-      mode3: "PR0_PRU1_GPI8"
-      mode4: "UART6_TXD"
-      mode5: "PR0_PRU0_GPO16"
-      mode6: "PR0_PRU0_GPI16"
-      mode7: "GPIO0_54"
-      mode8: ""
-    PA20:
-      description: "AIN5"
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
-    ADC_CH5:
-      description: ""
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+    GPIO0_54(Analog,PRU):
+      description: "General Purpose I/O"
+      mode0:
+        function: "VOUT0_DATA9"
+        description: "Video Output Data 9"
+      mode1:
+        function: "GPMC0_A9"
+        description: "GPMC Address 9 Output"
+      mode2:
+        function: "PR0_PRU1_GPO8"
+        description: "PRUSS PRU Data Output"
+      mode3:
+        function: "PR0_PRU1_GPI8"
+        description: "PRUSS PRU Data Input"
+      mode4:
+        function: "UART6_TXD"
+        description: "UART6 Transmit Data"
+      mode5:
+        function: "PR0_PRU0_GPO16"
+        description: "PRUSS PRU Data Output"
+      mode6:
+        function: "PR0_PRU0_GPI16"
+        description: "PRUSS PRU Data Input"
+      mode7:
+        function: "GPIO0_54"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
+      Mspm0mode:
+        function: "PA20"
+        description: "MSPM0 Port A Pin 20"
+      Mspm1mode:
+        function: "ADC_CH5"
+        description: "MSPM1 ADC Channel 5"
   P2.36:
-    GPI01_16:
-      description: ""
-      mode0: "SPI0_CS1"
-      mode1: "CP_GEMAC_CPTS0_TS_COMP"
-      mode2: "EHRPWM0_B"
-      mode3: "ECAP0_IN_APWM_OUT"
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: "GPIO1_16"
-      mode8: ""
-      mode9: "EHRPWM_TZn_IN5"
-    ADC_CH7:
-      description: ""
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
-    PA15:
-      description: ""
-      mode0: ""
-      mode1: ""
-      mode2: ""
-      mode3: ""
-      mode4: ""
-      mode5: ""
-      mode6: ""
-      mode7: ""
-      mode8: ""
+    GPI01_16(Analog):
+      description: "General Purpose I/O"
+      mode0:
+        function: "SPI0_CS1"
+        description: "SPI0 Chip Select 1"
+      mode1:
+        function: "CP_GEMAC_CPTS0_TS_COMP"
+        description: "CPTS Time Sync Compare"
+      mode2:
+        function: "EHRPWM0_B"
+        description: "Enhanced HRPWM0 Output B"
+      mode3:
+        function: "ECAP0_IN_APWM_OUT"
+        description: "ECAP0 Input / Auxiliary PWM Output"
+      mode4:
+        function: ""
+        description: "NA"
+      mode5:
+        function: ""
+        description: "NA"
+      mode6:
+        function: ""
+        description: "NA"
+      mode7:
+        function: "GPIO1_16"
+        description: "General Purpose I/O"
+      mode8:
+        function: ""
+        description: "NA"
+      mode9:
+        function: "EHRPWM_TZn_IN5"
+        description: "Enhanced HRPWM Trip Zone Input 5"
+      Mspm0mode:
+        function: "ADC_CH7"
+        description: "MSPM0 ADC Channel 7"
+      Mspm1mode:
+        function: "PA15"
+        description: "MSPM1 Port A Pin 15"
