@@ -94,7 +94,7 @@ const BeagleYAI = () => {
     | "5v Power"
     | "SoC Pin";
   const [gpio, setbus] = useState<string>('GPIO');
-const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
+  const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   // const pinData = {
   //   2: {
   //     title: "GPIO 2 (I2C Data)",
@@ -518,9 +518,9 @@ const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
   //     description: "GPIO 21 is used by PCM to provide a data output signal to an external audio device such as a DAC chip. The pin is also usable as a GPIO, hardware PWM or the hardware PWM-ECAP peripheral."
   //   }
   // };
- 
-const pinData: PinDataMap = {
-      "GPIO 2": {
+
+  const pinData: PinDataMap = {
+    "GPIO 2": {
       title: "GPIO 2 (I2C Data)",
       functions: [
         { name: "Alt0", values: ["MCU_I2C0_SDA"] },
@@ -1023,10 +1023,15 @@ const pinData: PinDataMap = {
   const handlePinLeave = () => {
     setHoveredPin(null);
   };
-
   const isPinOfSelectedBus = (pin: Pin): boolean => {
     if (!mode) return false;
 
+    // If a specific pin is selected, only highlight that pin
+    if (selectedPin) {
+      return pin.number === selectedPin.number && pin.name === selectedPin.name;
+    }
+
+    // Otherwise, highlight pins based on the selected bus
     switch (mode) {
       case 'SPI':
         return pin.SPI !== undefined;
@@ -1054,92 +1059,93 @@ const pinData: PinDataMap = {
         return pin.socPin !== undefined;
       case 'Ground':
         return pin.type === 'gnd';
-      // Add other cases as needed
       default:
         return false;
     }
   };
-const handlePinClick = (pinName: string, pinNumber: number) => {
-    if (pinName === 'Ground' || pinName === '5v Power' || pinName === '3v3 Power') {
-      setbus(pinName);
-      setMode(pinName);
-      setSelectedPin(null);
-    } else {
-      const clickedPin = [...leftPins, ...rightPins].find(pin => 
-        pin.number === pinNumber && pin.name === pinName
-      );
-      
-      if (clickedPin) {
+  const handlePinClick = (pinName: string, pinNumber: number) => {
+    const clickedPin = [...leftPins, ...rightPins].find(pin =>
+      pin.number === pinNumber && pin.name === pinName
+    );
+
+    if (clickedPin) {
+      if (clickedPin.type === 'gnd' || clickedPin.type === 'pow5v' || clickedPin.type === 'pow3v3') {
+        // For power/ground pins, set the bus mode
+        setbus(clickedPin.name);
+        setMode(clickedPin.name);
+        setSelectedPin(null);
+      } else {
+        // For other pins, show pin details
         setbus('Pin Details');
         setMode('Pin Details');
         setSelectedPin(clickedPin);
       }
     }
   };
-const ArticleContent = () => {
-  return (
-    <article>
-      <h1 className="text-3xl font-bold mb-4">Pinout!</h1>
-      <h3 className="text-xl mb-6">The BeagleY-AI GPIO pinout guide.</h3>
+  const ArticleContent = () => {
+    return (
+      <article>
+        <h1 className="text-3xl font-bold mb-4">Pinout!</h1>
+        <h3 className="text-xl mb-6">The BeagleY-AI GPIO pinout guide.</h3>
 
-      <p className="mb-4">
-        This GPIO Pinout is an interactive reference to the BeagleY-AI GPIO pins, and a guide to the BeagleY-AI's GPIO interfaces.
-        Pinout also includes <a href="/boards" className="text-blue-600 hover:underline">hundreds of pinouts for BeagleY-AI add-on boards, HATs and pHATs</a>.
-      </p>
+        <p className="mb-4">
+          This GPIO Pinout is an interactive reference to the BeagleY-AI GPIO pins, and a guide to the BeagleY-AI's GPIO interfaces.
+          Pinout also includes <a href="/boards" className="text-blue-600 hover:underline">hundreds of pinouts for BeagleY-AI add-on boards, HATs and pHATs</a>.
+        </p>
 
-      <h2 className="text-2xl font-bold mt-6 mb-2">Support Pinout.xyz</h2>
-      <p className="mb-4">If you love Pinout, please help me fund new features and improvements:</p>
-      <ul className="list-disc pl-5 mb-4">
-        <li className="mb-1">via GitHub at <a href="https://github.com/sponsors/gadgetoid" className="text-blue-600 hover:underline">GitHub.com/sponsors/gadgetoid</a></li>
-        <li className="mb-1">via Patreon at <a href="https://www.patreon.com/gadgetoid" className="text-blue-600 hover:underline">Patreon.com/gadgetoid</a></li>
-      </ul>
-      <p className="mb-4">Every $1 makes all the difference! Thank you.</p>
+        <h2 className="text-2xl font-bold mt-6 mb-2">Support Pinout.xyz</h2>
+        <p className="mb-4">If you love Pinout, please help me fund new features and improvements:</p>
+        <ul className="list-disc pl-5 mb-4">
+          <li className="mb-1">via GitHub at <a href="https://github.com/sponsors/gadgetoid" className="text-blue-600 hover:underline">GitHub.com/sponsors/gadgetoid</a></li>
+          <li className="mb-1">via Patreon at <a href="https://www.patreon.com/gadgetoid" className="text-blue-600 hover:underline">Patreon.com/gadgetoid</a></li>
+        </ul>
+        <p className="mb-4">Every $1 makes all the difference! Thank you.</p>
 
-      <h2 className="text-2xl font-bold mt-6 mb-2">What do these numbers mean?</h2>
-      <ul className="list-disc pl-5 mb-4">
-        <li className="mb-1">
-          <strong>GPIO</strong> - General Purpose Input/Output, aka "BCM" or "Broadcom". These are the big numbers, e.g. "GPIO 22".
-          You'll use these with RPi.GPIO and GPIO Zero.
-        </li>
-        <li className="mb-1">
-          <strong>Physical</strong> - or "Board" correspond to the pin's physical location on the header. These are the small numbers
-          next to the header, e.g. "Physical Pin 15".
-        </li>
-        <li className="mb-1">
-          <strong>SoC</strong> - or "Schematic" pins that match the actual processor. These are shown as a tooltip when you mouse over a pin.
-        </li>
-      </ul>
+        <h2 className="text-2xl font-bold mt-6 mb-2">What do these numbers mean?</h2>
+        <ul className="list-disc pl-5 mb-4">
+          <li className="mb-1">
+            <strong>GPIO</strong> - General Purpose Input/Output, aka "BCM" or "Broadcom". These are the big numbers, e.g. "GPIO 22".
+            You'll use these with RPi.GPIO and GPIO Zero.
+          </li>
+          <li className="mb-1">
+            <strong>Physical</strong> - or "Board" correspond to the pin's physical location on the header. These are the small numbers
+            next to the header, e.g. "Physical Pin 15".
+          </li>
+          <li className="mb-1">
+            <strong>SoC</strong> - or "Schematic" pins that match the actual processor. These are shown as a tooltip when you mouse over a pin.
+          </li>
+        </ul>
 
-      <h2 className="text-2xl font-bold mt-6 mb-2">What's the orientation of this pinout?</h2>
-      <p className="mb-4">
-        Pinout depicts pin 1 in the top left corner. Pin 1 is the only pin with a square solder pad, which may only be visible from
-        the underside of your BeagleY-AI. If you orient your BeagleY-AI such that you are looking at the top with the GPIO on the right
-        and HDMI port(s) on the left, your orientation will match Pinout.
-      </p>
+        <h2 className="text-2xl font-bold mt-6 mb-2">What's the orientation of this pinout?</h2>
+        <p className="mb-4">
+          Pinout depicts pin 1 in the top left corner. Pin 1 is the only pin with a square solder pad, which may only be visible from
+          the underside of your BeagleY-AI. If you orient your BeagleY-AI such that you are looking at the top with the GPIO on the right
+          and HDMI port(s) on the left, your orientation will match Pinout.
+        </p>
 
-      <h2 className="text-2xl font-bold mt-6 mb-2">More Resources</h2>
-      <p className="font-bold mb-2">For Support:</p>
-      <ul className="list-disc pl-5 mb-4">
-        <li className="mb-1"><a href="https://docs.beagleboard.org/latest/boards/beagley/ai/index.html" className="text-blue-600 hover:underline">docs.BeagleBoard.org</a></li>
-        <li className="mb-1"><a href="https://forum.beagleboard.org" className="text-blue-600 hover:underline">The BeagleBoard Forum</a></li>
-        <li className="mb-1"><a href="https://beagleboard.org/discord" className="text-blue-600 hover:underline">Discord</a></li>
-      </ul>
+        <h2 className="text-2xl font-bold mt-6 mb-2">More Resources</h2>
+        <p className="font-bold mb-2">For Support:</p>
+        <ul className="list-disc pl-5 mb-4">
+          <li className="mb-1"><a href="https://docs.beagleboard.org/latest/boards/beagley/ai/index.html" className="text-blue-600 hover:underline">docs.BeagleBoard.org</a></li>
+          <li className="mb-1"><a href="https://forum.beagleboard.org" className="text-blue-600 hover:underline">The BeagleBoard Forum</a></li>
+          <li className="mb-1"><a href="https://beagleboard.org/discord" className="text-blue-600 hover:underline">Discord</a></li>
+        </ul>
 
-      <p className="font-bold mb-2">Software &amp; Design Files:</p>
-      <ul className="list-disc pl-5 mb-4">
-        <li className="mb-1"><a href="https://www.beagleboard.org/distros" className="text-blue-600 hover:underline">Software Images</a></li>
-        <li className="mb-1"><a href="https://rcn-ee.net/rootfs/" className="text-blue-600 hover:underline">Software Images (nightly/experimental)</a></li>
-        <li className="mb-1"><a href="https://openbeagle.org/beagley-ai/beagley-ai/" className="text-blue-600 hover:underline">Design Files</a></li>
-      </ul>
+        <p className="font-bold mb-2">Software &amp; Design Files:</p>
+        <ul className="list-disc pl-5 mb-4">
+          <li className="mb-1"><a href="https://www.beagleboard.org/distros" className="text-blue-600 hover:underline">Software Images</a></li>
+          <li className="mb-1"><a href="https://rcn-ee.net/rootfs/" className="text-blue-600 hover:underline">Software Images (nightly/experimental)</a></li>
+          <li className="mb-1"><a href="https://openbeagle.org/beagley-ai/beagley-ai/" className="text-blue-600 hover:underline">Design Files</a></li>
+        </ul>
 
-      <p className="font-bold mb-2">Processor Documentation (AM67A):</p>
-      <ul className="list-disc pl-5">
-        <li className="mb-1"><a href="https://www.ti.com/lit/gpn/am67a" className="text-blue-600 hover:underline">Datasheet</a></li>
-        <li className="mb-1"><a href="https://www.ti.com/lit/zip/sprujb3" className="text-blue-600 hover:underline">Technical Reference Manual</a></li>
-      </ul>
-    </article>
-  );
-};
+        <p className="font-bold mb-2">Processor Documentation (AM67A):</p>
+        <ul className="list-disc pl-5">
+          <li className="mb-1"><a href="https://www.ti.com/lit/gpn/am67a" className="text-blue-600 hover:underline">Datasheet</a></li>
+          <li className="mb-1"><a href="https://www.ti.com/lit/zip/sprujb3" className="text-blue-600 hover:underline">Technical Reference Manual</a></li>
+        </ul>
+      </article>
+    );
+  };
   return (
     <div className="min-h-screen bg-white text-gray-900 mt-2 items-center justify-center">
 
@@ -1181,9 +1187,10 @@ const ArticleContent = () => {
                       <a
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
                         className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px] 
-    ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
-    w-[248px] no-underline pl-[10px] rounded-r-[13px]
-    ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'bg-[#f5f3ed] text-black-500' : 'bg-transparent'}`}
+  ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
+  w-[248px] no-underline ${leftPins ? 'rounded-r-[13px]' : 'rounded-l-[13px]'}
+  ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) ? 'bg-[#f5f3ed] text-black-500' : 'bg-transparent'}`}
+
                         title={pin.so_c ? `SoC pin ${pin.so_c}` : ''}
                       >
                         <span className='block'>
@@ -1233,9 +1240,10 @@ const ArticleContent = () => {
                       <a
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
                         className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px] 
-    ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
-    w-[248px] no-underline rounded-l-[13px]
-    ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'bg-[#f5f3ed]' : 'bg-transparent'}`}
+  ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
+  w-[248px] no-underline ${leftPins ? 'rounded-r-[13px]' : 'rounded-l-[13px]'}
+  ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) ? 'bg-[#f5f3ed] text-black-500' : 'bg-transparent'}`}
+
                         title={pin.socPin ? `SoC pin ${pin.socPin}` : ''}
                       >
                         <span className='block'>
@@ -1354,8 +1362,9 @@ const ArticleContent = () => {
                     <a onClick={() => {
                       setbus(item);
                       setMode(item);
+                      setSelectedPin(null); // Clear any selected pin when a bus is selected
                     }}
-                      className="inline-block px-3 py-1 cursor-pointer text-xs bg-indigo-600 text-white rounded hover:bg-indigo-200 hover:text-indigo-700 transition-colors">
+                      className={`inline-block px-3 py-1 cursor-pointer text-xs ${mode === item ? 'bg-indigo-200 text-indigo-700' : 'bg-indigo-600 text-white'} rounded hover:bg-indigo-200 hover:text-indigo-700 transition-colors`}>
                       {item}
                     </a>
                   </li>
@@ -1366,487 +1375,487 @@ const ArticleContent = () => {
 
               {mode === 'Pin Details' && selectedPin ? (
                 <PinDetails pin={selectedPin} />
-    ) : mode ? (
+              ) : mode ? (
                 (() => {
-                const busContent = {
-                  "GPCLK*": (
-                    <article className="page_gpclk">
-                      <h1 className="text-[2rem] font-bold">GPCLK - General Purpose Clock*</h1>
-                      <p>General Purpose Clock pins can be set up to output a fixed frequency without any ongoing software control.</p>
-                      <p><strong>(*) - GPCLK is not available on the 40 Pin Header on BeagleY-AI. CLK Outputs are only available from test pads and/or PCIe/CSI Headers</strong></p>
-                    </article>
-                  ),
-                  "MCU": (
-                    <article className="page_mcu px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">MCU - R5 Microcontroller Subsystem Pins</h1>
+                  const busContent = {
+                    "GPCLK*": (
+                      <article className="page_gpclk">
+                        <h1 className="text-[2rem] font-bold">GPCLK - General Purpose Clock*</h1>
+                        <p>General Purpose Clock pins can be set up to output a fixed frequency without any ongoing software control.</p>
+                        <p><strong>(*) - GPCLK is not available on the 40 Pin Header on BeagleY-AI. CLK Outputs are only available from test pads and/or PCIe/CSI Headers</strong></p>
+                      </article>
+                    ),
+                    "MCU": (
+                      <article className="page_mcu px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">MCU - R5 Microcontroller Subsystem Pins</h1>
 
-                      <p className="mb-2">
-                        The AM67A SoC Inside BeagleY-AI also features R5 MCU cores which are able to act independently
-                        of the Cortex A53 which normally run Linux.
-                      </p>
+                        <p className="mb-2">
+                          The AM67A SoC Inside BeagleY-AI also features R5 MCU cores which are able to act independently
+                          of the Cortex A53 which normally run Linux.
+                        </p>
 
-                      <p className="mb-2">
-                        You can use the R5 MCU to run Zephyr, MicroPython and much more without having to worry<sup>*</sup> about what other parts of the system are doing!
-                      </p>
+                        <p className="mb-2">
+                          You can use the R5 MCU to run Zephyr, MicroPython and much more without having to worry<sup>*</sup> about what other parts of the system are doing!
+                        </p>
 
-                      <p className="mb-6">
-                        The pins shown in this section are connected directly to the MCU cores, however, you can control
-                        any system pin from any core at the expense of some small amount of latency.
-                      </p>
+                        <p className="mb-6">
+                          The pins shown in this section are connected directly to the MCU cores, however, you can control
+                          any system pin from any core at the expense of some small amount of latency.
+                        </p>
 
-                      <div className="details">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>Uses 9 GPIO pins</li>
-                        </ul>
-                      </div>
-                    </article>
-                  ),
-                  "GPIO": (
-                    <article className="page_gpio px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">GPIO Pins</h1>
+                        <div className="details">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>Uses 9 GPIO pins</li>
+                          </ul>
+                        </div>
+                      </article>
+                    ),
+                    "GPIO": (
+                      <article className="page_gpio px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">GPIO Pins</h1>
 
-                      <p className="mb-2">
-                        GPIO stands for General-Purpose Input/Output. It’s a set of programmable pins that you can use to connect and control various electronic components.
-                      </p>
+                        <p className="mb-2">
+                          GPIO stands for General-Purpose Input/Output. It’s a set of programmable pins that you can use to connect and control various electronic components.
+                        </p>
 
-                      <p className="mb-6">
-                        You can set each pin to either read signals (input) from things like buttons and sensors or send signals (output) to things like LEDs and motors. This lets you interact with and control the physical world using code!
-                      </p>
+                        <p className="mb-6">
+                          You can set each pin to either read signals (input) from things like buttons and sensors or send signals (output) to things like LEDs and motors. This lets you interact with and control the physical world using code!
+                        </p>
 
-                      <div className="details">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>HAT form-factor</li>
-                          <li>Uses 28 GPIO pins</li>
-                          <li>
-                            <a
-                              href="https://docs.beagleboard.org/latest/boards/beagley/ai/demos/beagley-ai-using-gpio.html"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 underline hover:text-blue-800"
-                            >
-                              More Information
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </article>
-                  ),
-                  "I2C": (
-                    <article className="page_i2c px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">I2C - Inter Integrated Circuit</h1>
+                        <div className="details">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>HAT form-factor</li>
+                            <li>Uses 28 GPIO pins</li>
+                            <li>
+                              <a
+                                href="https://docs.beagleboard.org/latest/boards/beagley/ai/demos/beagley-ai-using-gpio.html"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline hover:text-blue-800"
+                              >
+                                More Information
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </article>
+                    ),
+                    "I2C": (
+                      <article className="page_i2c px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">I2C - Inter Integrated Circuit</h1>
 
-                      <p className="mb-2">
-                        GPIO 2 and GPIO 3 – BeagleY-AI's I2C1 pins – allow for two-wire communication with a variety of external sensors and devices.
-                      </p>
+                        <p className="mb-2">
+                          GPIO 2 and GPIO 3 – BeagleY-AI's I2C1 pins – allow for two-wire communication with a variety of external sensors and devices.
+                        </p>
 
-                      <p className="mb-2">
-                        The I2C pins include a fixed 2.2 kΩ pull-up resistor to 3.3v. They are not suitable for use as general purpose IO where a pull-up might interfere.
-                      </p>
+                        <p className="mb-2">
+                          The I2C pins include a fixed 2.2 kΩ pull-up resistor to 3.3v. They are not suitable for use as general purpose IO where a pull-up might interfere.
+                        </p>
 
-                      <p className="mb-2">
-                        I2C is a multi-drop bus, multiple devices can be connected to these same two pins. Each device has its own unique I2C address.
-                      </p>
+                        <p className="mb-2">
+                          I2C is a multi-drop bus, multiple devices can be connected to these same two pins. Each device has its own unique I2C address.
+                        </p>
 
-                      <p className="mb-2">
-                        You can verify the address of connected I2C peripherals with a simple one-liner:
-                      </p>
+                        <p className="mb-2">
+                          You can verify the address of connected I2C peripherals with a simple one-liner:
+                        </p>
 
-                      <pre className="bg-gray-100 p-4 rounded mb-4 text-sm overflow-x-auto">
-                        <code className="language-bash block whitespace-pre">
-                          {`sudo apt-get install i2c-tools
+                        <pre className="bg-gray-100 p-4 rounded mb-4 text-sm overflow-x-auto">
+                          <code className="language-bash block whitespace-pre">
+                            {`sudo apt-get install i2c-tools
 sudo i2cdetect -y 1`}
-                        </code>
-                      </pre>
+                          </code>
+                        </pre>
 
+                        <p className="mb-2">
+                          You can then access I2C from Python using the smbus library:
+                        </p>
+
+                        <pre className="bg-gray-100 p-4 rounded mb-6 text-sm overflow-x-auto">
+                          <code className="block whitespace-pre text-black">
+                            import smbus
+                            {"\n"}DEVICE_BUS = 1
+                            {"\n"}DEVICE_ADDR = 0x15
+                            {"\n"}bus = smbus.SMBus(DEVICE_BUS)
+                            {"\n"}bus.write_byte_data(DEVICE_ADDR, 0x00, 0x01)
+                          </code>
+                        </pre>
+                        <p className="mb-2">
+                          On BeagleY-AI, GPIO 0 and GPIO 1 are shared by the PMIC, Core Rail DCDC converter, Board ID EEPROM and External RTC and exposed as I2C0 – while they can be used as an alternate I2C bus, this is actively discouraged unless you are an advanced user and know what you're doing.
+                        </p>
+
+                        <p className="mb-6">
+                          (*) BeagleY-AI can make an additional I2C interface available (I2C4) via Header Pins 15 and 22 respectively.
+                        </p>
+
+                        <div className="details">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>
+                              <a
+                                href="http://www.raspberry-projects.com/pi/programming-in-python/i2c-programming-in-python/using-the-i2c-interface-2"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline hover:text-blue-800"
+                              >
+                                More Information
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </article>
+
+                    ),
+                    "SPI": (
+                      <article className="page_spi px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">SPI - Serial Peripheral Interface</h1>
+                        <hr className="mb-4 border-gray-400" />
+
+                        <p className="mb-2">
+                          Known as the four-wire serial bus, SPI lets you attach multiple compatible devices to a single set of pins
+                          by assigning them different chip-select pins.
+                        </p>
+
+                        <p className="mb-2">
+                          To talk to an SPI device, you assert its corresponding chip-select pin.
+                        </p>
+
+                        <p className="mb-2">
+                          By default the BeagleY allows you to use SPI0 with chip select pins on CE0 on GPIO 8 and CE1 on GPIO 7.
+                        </p>
+
+                        <p className="mb-2 font-semibold text-red-600">
+                          NOTE — For compatibility reasons, BeagleY-AI uses Software SPI and Symlinks to match the Raspberry Pi.
+                          Additional HW SPI resources are available for advanced users.
+                        </p>
+                      </article>
+                    ),
+                    "UART": (
+                      <article className="page_uart px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">UART - Universal Asynchronous Receiver/Transmitter</h1>
+                        <hr className="mb-4 border-gray-400" />
+
+                        <p className="mb-2">
+                          UART is an asynchronous serial communication protocol, meaning that it takes bytes of data and
+                          transmits the individual bits in a sequential fashion.
+                        </p>
+
+                        <p className="mb-2">
+                          Asynchronous transmission allows data to be transmitted without the sender having to send a clock signal
+                          to the receiver. Instead, the sender and receiver agree on timing parameters in advance and special bits
+                          called 'start bits' are added to each word and used to synchronize the sending and receiving units.
+                        </p>
+
+                        <p className="mb-2">
+                          UART is commonly used on the BeagleY-AI as a convenient way to control it over the GPIO, or access the kernel
+                          boot messages from the serial console (enabled by default).
+                        </p>
+
+                        <p className="mb-6">
+                          It can also be used as a way to interface an Arduino, bootloaded ATmega, ESP8266, etc with your BeagleY-AI.
+                          Be careful with logic-levels between the devices though—for example, the Beagle is 3.3v and the Arduino is 5v.
+                          Connecting the two without a logic level translator will damage your BeagleY-AI!
+                        </p>
+
+                        <div className="details">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>18 pin header</li>
+                            <li>Uses 18 GPIO pins</li>
+                          </ul>
+                        </div>
+                      </article>
+
+                    ),
+                    "PCM": (
+                      <article className="page_pcm px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">PCM - Pulse-code Modulation</h1>
+
+                        <p className="mb-2">
+                          PCM (Pulse-code Modulation) is a digital representation of sampled analog. On BeagleY-AI it's a form of
+                          digital audio output which can be understood by a DAC for high quality sound.
+                        </p>
+
+                        <p className="mb-2">
+                          By default, PCM is available on HW Pins 12, 35, 38, and 40.
+                        </p>
+
+                        <p className="mb-6">
+                          (*) - BeagleY-AI provides significantly more McASP muxing options than what is normally available.
+                        </p>
+
+                        <div className="details">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>Uses 12 GPIO pins</li>
+                          </ul>
+                        </div>
+                      </article>
+                    ),
+                    "DPI*": (<article className="page_dpi px-4 py-6 text-black">
+                      <h1 className="text-2xl font-bold mb-4">DPI - Display Parallel Interface</h1>
                       <p className="mb-2">
-                        You can then access I2C from Python using the smbus library:
-                      </p>
-
-                      <pre className="bg-gray-100 p-4 rounded mb-6 text-sm overflow-x-auto">
-                        <code className="block whitespace-pre text-black">
-                          import smbus
-                          {"\n"}DEVICE_BUS = 1
-                          {"\n"}DEVICE_ADDR = 0x15
-                          {"\n"}bus = smbus.SMBus(DEVICE_BUS)
-                          {"\n"}bus.write_byte_data(DEVICE_ADDR, 0x00, 0x01)
-                        </code>
-                      </pre>
-                      <p className="mb-2">
-                        On BeagleY-AI, GPIO 0 and GPIO 1 are shared by the PMIC, Core Rail DCDC converter, Board ID EEPROM and External RTC and exposed as I2C0 – while they can be used as an alternate I2C bus, this is actively discouraged unless you are an advanced user and know what you're doing.
-                      </p>
-
-                      <p className="mb-6">
-                        (*) BeagleY-AI can make an additional I2C interface available (I2C4) via Header Pins 15 and 22 respectively.
-                      </p>
-
-                      <div className="details">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>
-                            <a
-                              href="http://www.raspberry-projects.com/pi/programming-in-python/i2c-programming-in-python/using-the-i2c-interface-2"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 underline hover:text-blue-800"
-                            >
-                              More Information
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </article>
-
-                  ),
-                  "SPI": (
-                    <article className="page_spi px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">SPI - Serial Peripheral Interface</h1>
-                      <hr className="mb-4 border-gray-400" />
-
-                      <p className="mb-2">
-                        Known as the four-wire serial bus, SPI lets you attach multiple compatible devices to a single set of pins
-                        by assigning them different chip-select pins.
-                      </p>
-
-                      <p className="mb-2">
-                        To talk to an SPI device, you assert its corresponding chip-select pin.
-                      </p>
-
-                      <p className="mb-2">
-                        By default the BeagleY allows you to use SPI0 with chip select pins on CE0 on GPIO 8 and CE1 on GPIO 7.
-                      </p>
-
-                      <p className="mb-2 font-semibold text-red-600">
-                        NOTE — For compatibility reasons, BeagleY-AI uses Software SPI and Symlinks to match the Raspberry Pi.
-                        Additional HW SPI resources are available for advanced users.
-                      </p>
-                    </article>
-                  ),
-                  "UART": (
-                    <article className="page_uart px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">UART - Universal Asynchronous Receiver/Transmitter</h1>
-                      <hr className="mb-4 border-gray-400" />
-
-                      <p className="mb-2">
-                        UART is an asynchronous serial communication protocol, meaning that it takes bytes of data and
-                        transmits the individual bits in a sequential fashion.
-                      </p>
-
-                      <p className="mb-2">
-                        Asynchronous transmission allows data to be transmitted without the sender having to send a clock signal
-                        to the receiver. Instead, the sender and receiver agree on timing parameters in advance and special bits
-                        called 'start bits' are added to each word and used to synchronize the sending and receiving units.
-                      </p>
-
-                      <p className="mb-2">
-                        UART is commonly used on the BeagleY-AI as a convenient way to control it over the GPIO, or access the kernel
-                        boot messages from the serial console (enabled by default).
-                      </p>
-
-                      <p className="mb-6">
-                        It can also be used as a way to interface an Arduino, bootloaded ATmega, ESP8266, etc with your BeagleY-AI.
-                        Be careful with logic-levels between the devices though—for example, the Beagle is 3.3v and the Arduino is 5v.
-                        Connecting the two without a logic level translator will damage your BeagleY-AI!
-                      </p>
-
-                      <div className="details">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>18 pin header</li>
-                          <li>Uses 18 GPIO pins</li>
-                        </ul>
-                      </div>
-                    </article>
-
-                  ),
-                  "PCM": (
-                    <article className="page_pcm px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">PCM - Pulse-code Modulation</h1>
-
-                      <p className="mb-2">
-                        PCM (Pulse-code Modulation) is a digital representation of sampled analog. On BeagleY-AI it's a form of
-                        digital audio output which can be understood by a DAC for high quality sound.
-                      </p>
-
-                      <p className="mb-2">
-                        By default, PCM is available on HW Pins 12, 35, 38, and 40.
-                      </p>
-
-                      <p className="mb-6">
-                        (*) - BeagleY-AI provides significantly more McASP muxing options than what is normally available.
-                      </p>
-
-                      <div className="details">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>Uses 12 GPIO pins</li>
-                        </ul>
-                      </div>
-                    </article>
-                  ),
-                  "DPI*": (<article className="page_dpi px-4 py-6 text-black">
-                    <h1 className="text-2xl font-bold mb-4">DPI - Display Parallel Interface</h1>
-                    <p className="mb-2">
-                      The DPI Interface on BeagleY-AI is used by the RGB to HDMI framer.
-                    </p>
-                    <p className="font-semibold text-red-600">
-                      (*) - DPI is not available on the 40 Pin Header on BeagleY-AI. HATs that require DPI are not compatible.
-                    </p>
-                  </article>
-                  ),
-                  "1-WIRE": (
-                    <article className="page_1_wire px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">W1-GPIO - One-Wire Interface</h1>
-                      <p className="mb-6">
-                        One-wire is a single-wire communication bus typically used to connect sensors.
-                      </p>
-
-                      <div className="details">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>
-                            <a
-                              href="https://www.kernel.org/doc/Documentation/w1/w1.generic"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 underline hover:text-blue-800"
-                            >
-                              More Information
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </article>
-                  ),
-                  "SDIO*": (
-                    <article className="page_sdio px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">SDIO - SD Card Interface (*)</h1>
-                      <p className="mb-2">
-                        SDIO is the SD host/eMMC interface on the BeagleY-AI. SD host signals are normally used for the microSD slot.
+                        The DPI Interface on BeagleY-AI is used by the RGB to HDMI framer.
                       </p>
                       <p className="font-semibold text-red-600">
-                        (*) - SDIO is not available on the 40 Pin Header on BeagleY-AI.
+                        (*) - DPI is not available on the 40 Pin Header on BeagleY-AI. HATs that require DPI are not compatible.
                       </p>
                     </article>
-                  ),
-                  "PWM": (
-                    <article className="page_pwm px-4 py-6 ">
-                      <h1 className="text-2xl font-bold mb-4">PWM - Pulse-width Modulation</h1>
-                      <p className="mb-2">
-                        PWM (Pulse-width Modulation) is a method of creating an analog voltage
-                        by toggling a digital pin on and off.
-                      </p>
-                      <p className="mb-6">
-                        The GPIOs map to the Hardware PWM peripherals as such:
-                      </p>
+                    ),
+                    "1-WIRE": (
+                      <article className="page_1_wire px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">W1-GPIO - One-Wire Interface</h1>
+                        <p className="mb-6">
+                          One-wire is a single-wire communication bus typically used to connect sensors.
+                        </p>
 
-                      <div className="overflow-auto">
-                        <table className="table-auto border border-black mx-auto text-sm mb-6">
-                          <thead>
-                            <tr>
-                              <th className="border border-black px-6 py-2" />
-                              <th className="border border-black px-6 py-2" colSpan={2}>
-                                <b>PWM0</b>
-                              </th>
-                              <th className="border border-black px-6 py-2" colSpan={2}>
-                                <b>PWM1</b>
-                              </th>
-                              <th className="border border-black px-6 py-2" colSpan={3}>
-                                <b>ECAP</b>
-                              </th>
-                            </tr>
-                            <tr>
-                              <td className="border border-black px-6 py-2" />
-                              <td className="border border-black px-6 py-2">
-                                <b>A</b>
-                              </td>
-                              <td className="border border-black px-6 py-2">
-                                <b>B</b>
-                              </td>
-                              <td className="border border-black px-6 py-2">
-                                <b>A</b>
-                              </td>
-                              <td className="border border-black px-6 py-2">
-                                <b>B</b>
-                              </td>
-                              <td className="border border-black px-6 py-2">
-                                <b>0</b>
-                              </td>
-                              <td className="border border-black px-6 py-2">
-                                <b>1</b>
-                              </td>
-                              <td className="border border-black px-6 py-2">
-                                <b>2</b>
-                              </td>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {[
-                              ["GPIO5", "X", "", "", "", "", "", ""],
-                              ["GPIO6", "", "", "X", "", "", "", ""],
-                              ["GPIO12", "", "X", "", "", "X", "", ""],
-                              ["GPIO13", "", "", "", "X", "", "", ""],
-                              ["GPIO14", "", "X", "", "", "", "", ""],
-                              ["GPIO15", "X", "", "", "", "", "", ""],
-                              ["GPIO16", "", "", "", "", "", "X", ""],
-                              ["GPIO17", "", "", "", "", "", "", "X"],
-                              ["GPIO18", "", "", "", "", "", "", "X"],
-                              ["GPIO20", "", "", "", "X", "", "", ""],
-                              ["GPIO21", "", "", "X", "", "", "X", ""],
-                            ].map((row, i) => (
-                              <tr key={i}>
-                                {row.map((cell, j) => (
-                                  <td
-                                    key={j}
-                                    className="border border-black text-center px-6 py-1"
-                                  >
-                                    {cell}
-                                  </td>
-                                ))}
+                        <div className="details">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>
+                              <a
+                                href="https://www.kernel.org/doc/Documentation/w1/w1.generic"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline hover:text-blue-800"
+                              >
+                                More Information
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </article>
+                    ),
+                    "SDIO*": (
+                      <article className="page_sdio px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">SDIO - SD Card Interface (*)</h1>
+                        <p className="mb-2">
+                          SDIO is the SD host/eMMC interface on the BeagleY-AI. SD host signals are normally used for the microSD slot.
+                        </p>
+                        <p className="font-semibold text-red-600">
+                          (*) - SDIO is not available on the 40 Pin Header on BeagleY-AI.
+                        </p>
+                      </article>
+                    ),
+                    "PWM": (
+                      <article className="page_pwm px-4 py-6 ">
+                        <h1 className="text-2xl font-bold mb-4">PWM - Pulse-width Modulation</h1>
+                        <p className="mb-2">
+                          PWM (Pulse-width Modulation) is a method of creating an analog voltage
+                          by toggling a digital pin on and off.
+                        </p>
+                        <p className="mb-6">
+                          The GPIOs map to the Hardware PWM peripherals as such:
+                        </p>
+
+                        <div className="overflow-auto">
+                          <table className="table-auto border border-black mx-auto text-sm mb-6">
+                            <thead>
+                              <tr>
+                                <th className="border border-black px-6 py-2" />
+                                <th className="border border-black px-6 py-2" colSpan={2}>
+                                  <b>PWM0</b>
+                                </th>
+                                <th className="border border-black px-6 py-2" colSpan={2}>
+                                  <b>PWM1</b>
+                                </th>
+                                <th className="border border-black px-6 py-2" colSpan={3}>
+                                  <b>ECAP</b>
+                                </th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                              <tr>
+                                <td className="border border-black px-6 py-2" />
+                                <td className="border border-black px-6 py-2">
+                                  <b>A</b>
+                                </td>
+                                <td className="border border-black px-6 py-2">
+                                  <b>B</b>
+                                </td>
+                                <td className="border border-black px-6 py-2">
+                                  <b>A</b>
+                                </td>
+                                <td className="border border-black px-6 py-2">
+                                  <b>B</b>
+                                </td>
+                                <td className="border border-black px-6 py-2">
+                                  <b>0</b>
+                                </td>
+                                <td className="border border-black px-6 py-2">
+                                  <b>1</b>
+                                </td>
+                                <td className="border border-black px-6 py-2">
+                                  <b>2</b>
+                                </td>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {[
+                                ["GPIO5", "X", "", "", "", "", "", ""],
+                                ["GPIO6", "", "", "X", "", "", "", ""],
+                                ["GPIO12", "", "X", "", "", "X", "", ""],
+                                ["GPIO13", "", "", "", "X", "", "", ""],
+                                ["GPIO14", "", "X", "", "", "", "", ""],
+                                ["GPIO15", "X", "", "", "", "", "", ""],
+                                ["GPIO16", "", "", "", "", "", "X", ""],
+                                ["GPIO17", "", "", "", "", "", "", "X"],
+                                ["GPIO18", "", "", "", "", "", "", "X"],
+                                ["GPIO20", "", "", "", "X", "", "", ""],
+                                ["GPIO21", "", "", "X", "", "", "X", ""],
+                              ].map((row, i) => (
+                                <tr key={i}>
+                                  {row.map((cell, j) => (
+                                    <td
+                                      key={j}
+                                      className="border border-black text-center px-6 py-1"
+                                    >
+                                      {cell}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div className="details mt-6">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>Uses 12 GPIO pins</li>
+                          </ul>
+                        </div>
+                      </article>
+                    ),
+                    "JTAG*": (
+                      <article className="page_jtag px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">JTAG - Joint Test Action Group</h1>
+
+                        <p className="mb-2">
+                          JTAG is a standardized interface for debugging integrated circuits which you can use to debug your BeagleY-AI.
+                        </p>
+
+                        <p className="font-semibold text-red-600 mb-2">
+                          (*) - JTAG is not available on the 40 Pin Header on BeagleY-AI. The interface is instead available via the TagConnect 10 pin connector under the USB Type-A ports.
+                        </p>
+
+                        <p>
+                          Due to space constraints, the original retaining clips will not fit, but a 3D printable version is{" "}
+                          <a
+                            href="https://www.printables.com/model/879533-beagley-ai-tagconnect-clip-10pin"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline hover:text-blue-800"
+                          >
+                            available on Printables
+                          </a>.
+                        </p>
+                      </article>
+                    ),
+                    "Ground": (
+                      <article className="page_ground px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">Ground</h1>
+
+                        <p className="mb-2">
+                          The Ground pins on BeagleY-AI are all electrically connected, so it doesn't matter
+                          which one you use if you're wiring up a voltage supply.
+                        </p>
+
+                        <p className="mb-2">
+                          Generally the one that's most convenient or closest to the rest of your connections is tidier
+                          and easier, or alternatively the one closest to the supply pin that you use.
+                        </p>
+
+                        <p>
+                          For example, it's a good idea to use Physical Pin 17 for 3v3 and Physical Pin 25 for ground when using
+                          the SPI connections, as these are right next to the important pins for SPI0.
+                        </p>
+                      </article>
+                    ),
+                    "3v3 Power": (
+                      <article className="page_3v3_power px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">3v3 Power</h1>
+
+                        <p className="mb-2">
+                          BeagleY-AI generates its 3v3 power from Buck 1 of the TPS65129 PMIC, meaning that it has up to 3.5A of current available.
+                        </p>
+
+                        <p className="mb-2">
+                          This rail is shared with other on-board peripherals such as the HDMI framer, USB hub and Ethernet PHY, so expect to have about 500mA usable.
+                        </p>
+
+                        <p>
+                          An external supply coupled with a 3v3 regulator is recommended for powering 3.3v projects.
+                        </p>
+                      </article>
+                    ),
+                    "5v Power": (
+                      <article className="page_5v_power px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">5v Power</h1>
+
+                        <p className="mb-2">
+                          The 5v power pins are connected directly to the BeagleY-AI power input and will capably provide the full supply current of your mains adapter, minus that used by the BeagleY-AI itself.
+                        </p>
+
+                        <p>
+                          With a decent USB-C PD power supply, you can expect to pull about 1.5A depending on peripheral load.
+                          Devices that require high current — such as LED panels, long LED strips, or motors — should use an external power supply.
+                        </p>
+                      </article>
+                    ),
+                    "SoC Pin": (
+                      <article className="page_soc_pin px-4 py-6 text-black">
+                        <h1 className="text-2xl font-bold mb-4">SoC Pins</h1>
+
+                        <p className="mb-2">
+                          SoC Pins are the raw pin names from the AM67A SoC.
+                        </p>
+
+                        <p className="mb-2">
+                          This nomenclature is useful when referencing the schematic or creating device trees and other advanced uses.
+                        </p>
+
+                        <p className="mb-6">
+                          You can explore more details of what each pin is capable of in the device Datasheet and Technical Reference Manual.
+                        </p>
+
+                        <div className="details">
+                          <h2 className="text-xl font-semibold mb-2">Details</h2>
+                          <ul className="list-disc list-inside">
+                            <li>HAT form-factor</li>
+                            <li>
+                              <a
+                                href="https://www.ti.com/lit/ds/symlink/am67a.pdf"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline hover:text-blue-800"
+                              >
+                                More Information
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </article>
+                    )
+                  };
+
+                  if (gpio in busContent) {
+                    return (
+                      <div id="content">
+                        <div id="featured">
+                          <ul></ul>
+                        </div>
+                        {busContent[gpio as BusType]}
+                        <div id="lang"></div>
                       </div>
-
-                      <div className="details mt-6">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>Uses 12 GPIO pins</li>
-                        </ul>
-                      </div>
-                    </article>
-                  ),
-                  "JTAG*": (
-                    <article className="page_jtag px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">JTAG - Joint Test Action Group</h1>
-
-                      <p className="mb-2">
-                        JTAG is a standardized interface for debugging integrated circuits which you can use to debug your BeagleY-AI.
-                      </p>
-
-                      <p className="font-semibold text-red-600 mb-2">
-                        (*) - JTAG is not available on the 40 Pin Header on BeagleY-AI. The interface is instead available via the TagConnect 10 pin connector under the USB Type-A ports.
-                      </p>
-
-                      <p>
-                        Due to space constraints, the original retaining clips will not fit, but a 3D printable version is{" "}
-                        <a
-                          href="https://www.printables.com/model/879533-beagley-ai-tagconnect-clip-10pin"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline hover:text-blue-800"
-                        >
-                          available on Printables
-                        </a>.
-                      </p>
-                    </article>
-                  ),
-                  "Ground": (
-                    <article className="page_ground px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">Ground</h1>
-
-                      <p className="mb-2">
-                        The Ground pins on BeagleY-AI are all electrically connected, so it doesn't matter
-                        which one you use if you're wiring up a voltage supply.
-                      </p>
-
-                      <p className="mb-2">
-                        Generally the one that's most convenient or closest to the rest of your connections is tidier
-                        and easier, or alternatively the one closest to the supply pin that you use.
-                      </p>
-
-                      <p>
-                        For example, it's a good idea to use Physical Pin 17 for 3v3 and Physical Pin 25 for ground when using
-                        the SPI connections, as these are right next to the important pins for SPI0.
-                      </p>
-                    </article>
-                  ),
-                  "3v3 Power": (
-                    <article className="page_3v3_power px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">3v3 Power</h1>
-
-                      <p className="mb-2">
-                        BeagleY-AI generates its 3v3 power from Buck 1 of the TPS65129 PMIC, meaning that it has up to 3.5A of current available.
-                      </p>
-
-                      <p className="mb-2">
-                        This rail is shared with other on-board peripherals such as the HDMI framer, USB hub and Ethernet PHY, so expect to have about 500mA usable.
-                      </p>
-
-                      <p>
-                        An external supply coupled with a 3v3 regulator is recommended for powering 3.3v projects.
-                      </p>
-                    </article>
-                  ),
-                  "5v Power": (
-                    <article className="page_5v_power px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">5v Power</h1>
-
-                      <p className="mb-2">
-                        The 5v power pins are connected directly to the BeagleY-AI power input and will capably provide the full supply current of your mains adapter, minus that used by the BeagleY-AI itself.
-                      </p>
-
-                      <p>
-                        With a decent USB-C PD power supply, you can expect to pull about 1.5A depending on peripheral load.
-                        Devices that require high current — such as LED panels, long LED strips, or motors — should use an external power supply.
-                      </p>
-                    </article>
-                  ),
-                  "SoC Pin": (
-                    <article className="page_soc_pin px-4 py-6 text-black">
-                      <h1 className="text-2xl font-bold mb-4">SoC Pins</h1>
-
-                      <p className="mb-2">
-                        SoC Pins are the raw pin names from the AM67A SoC.
-                      </p>
-
-                      <p className="mb-2">
-                        This nomenclature is useful when referencing the schematic or creating device trees and other advanced uses.
-                      </p>
-
-                      <p className="mb-6">
-                        You can explore more details of what each pin is capable of in the device Datasheet and Technical Reference Manual.
-                      </p>
-
-                      <div className="details">
-                        <h2 className="text-xl font-semibold mb-2">Details</h2>
-                        <ul className="list-disc list-inside">
-                          <li>HAT form-factor</li>
-                          <li>
-                            <a
-                              href="https://www.ti.com/lit/ds/symlink/am67a.pdf"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 underline hover:text-blue-800"
-                            >
-                              More Information
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </article>
-                  )
-                };
-
-                if (gpio in busContent) {
-                  return (
-                    <div id="content">
-                      <div id="featured">
-                        <ul></ul>
-                      </div>
-                      {busContent[gpio as BusType]}
-                      <div id="lang"></div>
-                    </div>
-                  );
-                }
+                    );
+                  }
 
 
-              })()
-              ): (
-      <ArticleContent />
-    )}
+                })()
+              ) : (
+                <ArticleContent />
+              )}
             </div>
 
           </div>
