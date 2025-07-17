@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import beagleLogo from './pinout-beagle-logo.png';
 import beagleOrientation from './beagley-orientation.png';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 
 interface Pin {
@@ -36,7 +37,7 @@ type PinDataMap = {
   [key: string]: PinData;
 };
 
-const BeagleYAI = () => {
+const BeagleYAIWithSearchParams = () => {
   const leftPins: Pin[] = [
     { number: 1, name: '3v3 Power', type: 'pow3v3' },
     { number: 3, name: 'GPIO 2', type: 'i2c', altFunction: 'I2C1 SDA', so_c: 'E11', MCU: 'MCU_I2C0_SDA', GPIO: 'SoC Pin E11', I2C: 'Data', UART: 'CTS / Clear to send', socPin: 'SOC Pin E11' },
@@ -818,6 +819,7 @@ const BeagleYAI = () => {
     );
   };
   return (
+    
     <div className="min-h-screen bg-white text-gray-900 mt-2 items-center justify-center">
 
       <div className="container items-center justify-center mx-auto ">
@@ -1541,4 +1543,10 @@ sudo i2cdetect -y 1`}
   );
 };
 
-export default BeagleYAI;
+export default function BeagleYAI() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BeagleYAIWithSearchParams />
+    </Suspense>
+  );
+}
