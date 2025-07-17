@@ -1,8 +1,10 @@
 "use client";
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import beagleLogo from './pinout-beagle-logo.png';
 import beagleOrientation from './beagley-orientation.png';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 
 interface Pin {
   number: number;
@@ -95,7 +97,26 @@ const BeagleYAI = () => {
     | "SoC Pin";
   const [gpio, setbus] = useState<string>('GPIO');
   const [selectedPin, setSelectedPin] = useState<Pin | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const pinNumber = searchParams.get('pin');
+    const bus = searchParams.get('bus');
 
+    if (pinNumber) {
+      const pinNum = parseInt(pinNumber);
+      const foundPin = [...leftPins, ...rightPins].find(pin => pin.number === pinNum);
+      if (foundPin) {
+        setbus('Pin Details');
+        setMode('Pin Details');
+        setSelectedPin(foundPin);
+      }
+    } else if (bus) {
+      setbus(bus);
+      setMode(bus);
+      setSelectedPin(null);
+    }
+  }, [searchParams]);
   const pinData: PinDataMap = {
     "GPIO 2": {
       title: "GPIO 2 (I2C Data)",
@@ -532,44 +553,52 @@ const BeagleYAI = () => {
     };
 
     return (
-      <article className="p-6 bg-white shadow-md rounded-lg">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">{data.title}</h1>
+      <article className="p-6 bg-white shadow-md rounded-lg max-w-full overflow-x-auto">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4 break-words">{data.title}</h1>
 
         {data.functions.length > 0 && (
-          <table className="table-auto w-full mb-4 border border-gray-300">
-            <thead className="bg-gray-100">
-              <tr>
-                {data.functions.map((func) => (
-                  <th key={func.name} className="border border-gray-300 px-2 py-2">
-                    {func.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                {data.functions.map((func) => (
-                  <td key={func.name} className="border border-gray-300 px-2 py-2">
-                    {func.values.join(", ")}
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full mb-4 border border-gray-300">
+              <thead className="bg-gray-100">
+                <tr>
+                  {data.functions.map((func) => (
+                    <th
+                      key={func.name}
+                      className="border border-gray-300 px-2 py-2 whitespace-nowrap"
+                    >
+                      {func.name}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {data.functions.map((func) => (
+                    <td
+                      key={func.name}
+                      className="border border-gray-300 px-2 py-2 break-words min-w-[100px]"
+                    >
+                      {func.values.join(", ")}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
         )}
 
         <ul className="list-disc list-inside text-gray-700 mb-4">
           {data.notes.map((note, index) => (
-            <li key={index}>{note}</li>
+            <li key={index} className="break-words">{note}</li>
           ))}
         </ul>
 
         {data.description && (
-          <p className="text-gray-700 mb-2">{data.description}</p>
+          <p className="text-gray-700 mb-2 break-words">{data.description}</p>
         )}
 
         {data.learnMoreLink && (
-          <p className="text-gray-700">
+          <p className="text-gray-700 break-words">
             <a href={data.learnMoreLink} className="text-blue-600 underline hover:text-blue-800">
               Learn more about {pin.type}
             </a>
@@ -578,6 +607,61 @@ const BeagleYAI = () => {
       </article>
     );
   };
+
+  // const PinDetails = ({ pin }: { pin: Pin }) => {
+  //   const data = pinData[pin.name] || {
+  //     title: pin.name,
+  //     functions: [],
+  //     notes: [
+  //       `Physical/Board pin ${pin.number}`,
+  //       `SoC pin ${pin.so_c || 'N/A'}`
+  //     ],
+  //     description: pin.description || "This pin is usable as a GPIO."
+  //   };
+
+  //   return (
+  //     <article className="p-6 bg-white shadow-md rounded-lg">
+  //       <h1 className="text-2xl font-bold text-gray-800 mb-4">{data.title}</h1>
+
+  //       {data.functions.length > 0 && (
+  //         <div className="mb-4">
+  //           <div className="flex flex-wrap gap-2 mb-2">
+  //             {data.functions.map((func) => (
+  //               <div key={func.name} className="bg-gray-100 p-2 rounded">
+  //                 <span className="font-semibold">{func.name}:</span>
+  //                 <div className="flex flex-wrap gap-1 mt-1">
+  //                   {func.values.map((value, i) => (
+  //                     <span key={i} className="bg-gray-200 px-2 py-1 rounded text-sm">
+  //                       {value}
+  //                     </span>
+  //                   ))}
+  //                 </div>
+  //               </div>
+  //             ))}
+  //           </div>
+  //         </div>
+  //       )}
+
+  //       <ul className="list-disc list-inside text-gray-700 mb-4">
+  //         {data.notes.map((note, index) => (
+  //           <li key={index}>{note}</li>
+  //         ))}
+  //       </ul>
+
+  //       {data.description && (
+  //         <p className="text-gray-700 mb-2">{data.description}</p>
+  //       )}
+
+  //       {data.learnMoreLink && (
+  //         <p className="text-gray-700">
+  //           <a href={data.learnMoreLink} className="text-blue-600 underline hover:text-blue-800">
+  //             Learn more about {pin.type}
+  //           </a>
+  //         </p>
+  //       )}
+  //     </article>
+  //   );
+  // };
   const getPinColor = (type: string) => {
     switch (type) {
       case 'pow3v3': return 'bg-[#B58900]';
@@ -640,6 +724,13 @@ const BeagleYAI = () => {
         return false;
     }
   };
+
+  const handleBusSelect = (bus: string) => {
+    setbus(bus);
+    setMode(bus);
+    setSelectedPin(null);
+    router.push(`?bus=${encodeURIComponent(bus)}`);
+  };
   const handlePinClick = (pinName: string, pinNumber: number) => {
     const clickedPin = [...leftPins, ...rightPins].find(pin =>
       pin.number === pinNumber && pin.name === pinName
@@ -647,18 +738,21 @@ const BeagleYAI = () => {
 
     if (clickedPin) {
       if (clickedPin.type === 'gnd' || clickedPin.type === 'pow5v' || clickedPin.type === 'pow3v3') {
-        // For power/ground pins, set the bus mode
+        // For power/ground pins, set the bus mode and update URL
         setbus(clickedPin.name);
         setMode(clickedPin.name);
         setSelectedPin(null);
+        router.push(`?bus=${encodeURIComponent(clickedPin.name)}`);
       } else {
-        // For other pins, show pin details
+        // For other pins, show pin details and update URL
         setbus('Pin Details');
         setMode('Pin Details');
         setSelectedPin(clickedPin);
+        router.push(`?pin=${clickedPin.number}`);
       }
     }
   };
+
   const ArticleContent = () => {
     return (
       <article>
@@ -764,7 +858,7 @@ const BeagleYAI = () => {
                       <a
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
                         className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px] 
-  ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' :'text-[#E9E5D2]'} 
+  ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
   w-[248px] no-underline  ${leftPins ? 'rounded-r-[13px]' : 'rounded-l-[13px]'}
   ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) ? 'bg-[#f5f3ed] text-black-500' : 'bg-transparent'}`}
 
@@ -818,7 +912,7 @@ const BeagleYAI = () => {
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
                         className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px]  
   ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
-  w-[248px] no-underline ${leftPins ? 'rounded-r-[13px]' : 'rounded-l-[13px]'}
+  w-[248px] no-underline  rounded-l-[13px]
   ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) ? 'bg-[#f5f3ed] text-black-500' : 'bg-transparent'}`}
 
                         title={pin.socPin ? `SoC pin ${pin.socPin}` : ''}
@@ -936,11 +1030,7 @@ const BeagleYAI = () => {
               <ul className="flex flex-wrap gap-1 justify-end">
                 {['GPCLK*', 'MCU', 'GPIO', 'JTAG*', 'Ground', 'PWM', 'SDIO*', 'PCM', '1-WIRE', 'I2C', 'DPI*', 'UART', '3v3 Power', '5v Power', 'SPI', 'SoC Pin'].map((item) => (
                   <li key={item}>
-                    <a onClick={() => {
-                      setbus(item);
-                      setMode(item);
-                      setSelectedPin(null); // Clear any selected pin when a bus is selected
-                    }}
+                    <a onClick={() => handleBusSelect(item)}
                       className={`inline-block px-3 py-1 cursor-pointer text-xs ${mode === item ? 'bg-indigo-200 text-indigo-700' : 'bg-indigo-600 text-white'} rounded hover:bg-indigo-200 hover:text-indigo-700 transition-colors`}>
                       {item}
                     </a>
