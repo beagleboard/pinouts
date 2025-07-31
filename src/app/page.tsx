@@ -38,6 +38,21 @@ type PinDataMap = {
 };
 
 const BeagleYAIWithSearchParams = () => {
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true';
+    }
+    return true; // Changed from false to true
+  });
+
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('darkMode', String(newMode));
+    }
+  };
+
   const leftPins: Pin[] = [
     { number: 1, name: '3v3 Power', type: 'pow3v3' },
     { number: 3, name: 'GPIO 2', type: 'i2c', altFunction: 'I2C1 SDA', so_c: 'E11', MCU: 'MCU_I2C0_SDA', GPIO: 'SoC Pin E11', I2C: 'Data', UART: 'CTS / Clear to send', socPin: 'SOC Pin E11' },
@@ -554,53 +569,41 @@ const BeagleYAIWithSearchParams = () => {
     };
 
     return (
-      <article className="p-6 bg-white shadow-md rounded-lg max-w-full overflow-x-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4 break-words">{data.title}</h1>
+      <article className={`p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md rounded-lg`}>
+        <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'} mb-4`}>{data.title}</h1>
 
         {data.functions.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full mb-4 border border-gray-300">
-              <thead className="bg-gray-100">
-                <tr>
-                  {data.functions.map((func) => (
-                    <th
-                      key={func.name}
-                      className="border border-gray-300 px-2 py-2 whitespace-nowrap"
-                    >
-                      {func.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  {data.functions.map((func) => (
-                    <td
-                      key={func.name}
-                      className="border border-gray-300 px-2 py-2 break-words min-w-[100px]"
-                    >
-                      {func.values.join(", ")}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-2 mb-2">
+              {data.functions.map((func) => (
+                <div key={func.name} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} p-2 rounded`}>
+                  <span className={`font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>{func.name}:</span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {func.values.map((value, i) => (
+                      <span key={i} className={`${darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200'} px-2 py-1 rounded text-sm`}>
+                        {value}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        <ul className="list-disc list-inside text-gray-700 mb-4">
+        <ul className={`list-disc list-inside ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
           {data.notes.map((note, index) => (
-            <li key={index} className="break-words">{note}</li>
+            <li key={index}>{note}</li>
           ))}
         </ul>
 
         {data.description && (
-          <p className="text-gray-700 mb-2 break-words">{data.description}</p>
+          <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>{data.description}</p>
         )}
 
         {data.learnMoreLink && (
-          <p className="text-gray-700 break-words">
-            <a href={data.learnMoreLink} className="text-blue-600 underline hover:text-blue-800">
+          <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            <a href={data.learnMoreLink} className="text-blue-400 underline hover:text-blue-600">
               Learn more about {pin.type}
             </a>
           </p>
@@ -608,61 +611,6 @@ const BeagleYAIWithSearchParams = () => {
       </article>
     );
   };
-
-  // const PinDetails = ({ pin }: { pin: Pin }) => {
-  //   const data = pinData[pin.name] || {
-  //     title: pin.name,
-  //     functions: [],
-  //     notes: [
-  //       `Physical/Board pin ${pin.number}`,
-  //       `SoC pin ${pin.so_c || 'N/A'}`
-  //     ],
-  //     description: pin.description || "This pin is usable as a GPIO."
-  //   };
-
-  //   return (
-  //     <article className="p-6 bg-white shadow-md rounded-lg">
-  //       <h1 className="text-2xl font-bold text-gray-800 mb-4">{data.title}</h1>
-
-  //       {data.functions.length > 0 && (
-  //         <div className="mb-4">
-  //           <div className="flex flex-wrap gap-2 mb-2">
-  //             {data.functions.map((func) => (
-  //               <div key={func.name} className="bg-gray-100 p-2 rounded">
-  //                 <span className="font-semibold">{func.name}:</span>
-  //                 <div className="flex flex-wrap gap-1 mt-1">
-  //                   {func.values.map((value, i) => (
-  //                     <span key={i} className="bg-gray-200 px-2 py-1 rounded text-sm">
-  //                       {value}
-  //                     </span>
-  //                   ))}
-  //                 </div>
-  //               </div>
-  //             ))}
-  //           </div>
-  //         </div>
-  //       )}
-
-  //       <ul className="list-disc list-inside text-gray-700 mb-4">
-  //         {data.notes.map((note, index) => (
-  //           <li key={index}>{note}</li>
-  //         ))}
-  //       </ul>
-
-  //       {data.description && (
-  //         <p className="text-gray-700 mb-2">{data.description}</p>
-  //       )}
-
-  //       {data.learnMoreLink && (
-  //         <p className="text-gray-700">
-  //           <a href={data.learnMoreLink} className="text-blue-600 underline hover:text-blue-800">
-  //             Learn more about {pin.type}
-  //           </a>
-  //         </p>
-  //       )}
-  //     </article>
-  //   );
-  // };
   const getPinColor = (type: string) => {
     switch (type) {
       case 'pow3v3': return 'bg-[#B58900]';
@@ -757,24 +705,24 @@ const BeagleYAIWithSearchParams = () => {
   const ArticleContent = () => {
     return (
       <article>
-        <h1 className="text-3xl font-bold mb-4">Pinout!</h1>
-        <h3 className="text-xl mb-6">The BeagleY-AI GPIO pinout guide.</h3>
+        <h1 className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>Pinout!</h1>
+        <h3 className={`text-xl mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>The BeagleY-AI GPIO pinout guide.</h3>
 
-        <p className="mb-4">
+        <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           This GPIO Pinout is an interactive reference to the BeagleY-AI GPIO pins, and a guide to the BeagleY-AI's GPIO interfaces.
-          Pinout also includes <a href="/boards" className="text-blue-600 hover:underline">hundreds of pinouts for BeagleY-AI add-on boards, HATs and pHATs</a>.
+          Pinout also includes <a href="/boards" className="text-blue-400 hover:underline">hundreds of pinouts for BeagleY-AI add-on boards, HATs and pHATs</a>.
         </p>
 
-        <h2 className="text-2xl font-bold mt-6 mb-2">Support Pinout.xyz</h2>
-        <p className="mb-4">If you love Pinout, please help me fund new features and improvements:</p>
-        <ul className="list-disc pl-5 mb-4">
-          <li className="mb-1">via GitHub at <a href="https://github.com/sponsors/gadgetoid" className="text-blue-600 hover:underline">GitHub.com/sponsors/gadgetoid</a></li>
-          <li className="mb-1">via Patreon at <a href="https://www.patreon.com/gadgetoid" className="text-blue-600 hover:underline">Patreon.com/gadgetoid</a></li>
+        <h2 className={`text-2xl font-bold mt-6 mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Support Pinout.xyz</h2>
+        <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>If you love Pinout, please help me fund new features and improvements:</p>
+        <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <li className="mb-1">via GitHub at <a href="https://github.com/sponsors/gadgetoid" className="text-blue-400 hover:underline">GitHub.com/sponsors/gadgetoid</a></li>
+          <li className="mb-1">via Patreon at <a href="https://www.patreon.com/gadgetoid" className="text-blue-400 hover:underline">Patreon.com/gadgetoid</a></li>
         </ul>
-        <p className="mb-4">Every $1 makes all the difference! Thank you.</p>
+        <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Every $1 makes all the difference! Thank you.</p>
 
-        <h2 className="text-2xl font-bold mt-6 mb-2">What do these numbers mean?</h2>
-        <ul className="list-disc pl-5 mb-4">
+        <h2 className={`text-2xl font-bold mt-6 mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>What do these numbers mean?</h2>
+        <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           <li className="mb-1">
             <strong>GPIO</strong> - General Purpose Input/Output, aka "BCM" or "Broadcom". These are the big numbers, e.g. "GPIO 22".
             You'll use these with RPi.GPIO and GPIO Zero.
@@ -788,39 +736,39 @@ const BeagleYAIWithSearchParams = () => {
           </li>
         </ul>
 
-        <h2 className="text-2xl font-bold mt-6 mb-2">What's the orientation of this pinout?</h2>
-        <p className="mb-4">
+        <h2 className={`text-2xl font-bold mt-6 mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>What's the orientation of this pinout?</h2>
+        <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           Pinout depicts pin 1 in the top left corner. Pin 1 is the only pin with a square solder pad, which may only be visible from
           the underside of your BeagleY-AI. If you orient your BeagleY-AI such that you are looking at the top with the GPIO on the right
           and HDMI port(s) on the left, your orientation will match Pinout.
         </p>
 
-        <h2 className="text-2xl font-bold mt-6 mb-2">More Resources</h2>
-        <p className="font-bold mb-2">For Support:</p>
-        <ul className="list-disc pl-5 mb-4">
-          <li className="mb-1"><a href="https://docs.beagleboard.org/latest/boards/beagley/ai/index.html" className="text-blue-600 hover:underline">docs.BeagleBoard.org</a></li>
-          <li className="mb-1"><a href="https://forum.beagleboard.org" className="text-blue-600 hover:underline">The BeagleBoard Forum</a></li>
-          <li className="mb-1"><a href="https://beagleboard.org/discord" className="text-blue-600 hover:underline">Discord</a></li>
+        <h2 className={`text-2xl font-bold mt-6 mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>More Resources</h2>
+        <p className={`font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>For Support:</p>
+        <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <li className="mb-1"><a href="https://docs.beagleboard.org/latest/boards/beagley/ai/index.html" className="text-blue-400 hover:underline">docs.BeagleBoard.org</a></li>
+          <li className="mb-1"><a href="https://forum.beagleboard.org" className="text-blue-400 hover:underline">The BeagleBoard Forum</a></li>
+          <li className="mb-1"><a href="https://beagleboard.org/discord" className="text-blue-400 hover:underline">Discord</a></li>
         </ul>
 
-        <p className="font-bold mb-2">Software &amp; Design Files:</p>
-        <ul className="list-disc pl-5 mb-4">
-          <li className="mb-1"><a href="https://www.beagleboard.org/distros" className="text-blue-600 hover:underline">Software Images</a></li>
-          <li className="mb-1"><a href="https://rcn-ee.net/rootfs/" className="text-blue-600 hover:underline">Software Images (nightly/experimental)</a></li>
-          <li className="mb-1"><a href="https://openbeagle.org/beagley-ai/beagley-ai/" className="text-blue-600 hover:underline">Design Files</a></li>
+        <p className={`font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Software &amp; Design Files:</p>
+        <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <li className="mb-1"><a href="https://www.beagleboard.org/distros" className="text-blue-400 hover:underline">Software Images</a></li>
+          <li className="mb-1"><a href="https://rcn-ee.net/rootfs/" className="text-blue-400 hover:underline">Software Images (nightly/experimental)</a></li>
+          <li className="mb-1"><a href="https://openbeagle.org/beagley-ai/beagley-ai/" className="text-blue-400 hover:underline">Design Files</a></li>
         </ul>
 
-        <p className="font-bold mb-2">Processor Documentation (AM67A):</p>
-        <ul className="list-disc pl-5">
-          <li className="mb-1"><a href="https://www.ti.com/lit/gpn/am67a" className="text-blue-600 hover:underline">Datasheet</a></li>
-          <li className="mb-1"><a href="https://www.ti.com/lit/zip/sprujb3" className="text-blue-600 hover:underline">Technical Reference Manual</a></li>
+        <p className={`font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Processor Documentation (AM67A):</p>
+        <ul className={`list-disc pl-5 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <li className="mb-1"><a href="https://www.ti.com/lit/gpn/am67a" className="text-blue-400 hover:underline">Datasheet</a></li>
+          <li className="mb-1"><a href="https://www.ti.com/lit/zip/sprujb3" className="text-blue-400 hover:underline">Technical Reference Manual</a></li>
         </ul>
       </article>
     );
   };
   return (
-    
-    <div className="min-h-screen bg-white text-gray-900 mt-2 items-center justify-center">
+
+    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'} items-center justify-center`}>
 
       <div className="container items-center justify-center mx-auto ">
 
@@ -829,7 +777,7 @@ const BeagleYAIWithSearchParams = () => {
           {/* Left Column */}
           <div className="">
             {/* GPIO Pinout */}
-            <div style={{ fontFamily: 'Avenir, sans-serif', color: '#073642', background: '#ffffff', marginBottom: '10px' }}>
+            <div style={{ fontFamily: 'Avenir, sans-serif', color: `${darkMode ? '#E9E5D2' : '#073642'}`, marginBottom: '10px' }}>
               <Head>
                 <title>BeagleY-AI GPIO Pinout</title>
                 <meta name="description" content="The comprehensive add-on boards & GPIO Pinout guide for the BeagleY-AI" />
@@ -839,59 +787,95 @@ const BeagleYAIWithSearchParams = () => {
               <header className="flex items-center p-4 ">
                 <img src={beagleLogo.src} alt="Beagle Logo" className="w-12 h-12" />
                 <h1 className="text-2xl font-bold">BeagleY-AI Pinout</h1>
+                <button
+                  onClick={toggleDarkMode}
+                  className={`ml-auto p-2 rounded-full  ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'} transition-colors`}
+                  aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+                >
+                  {darkMode ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                  )}
+                </button>
               </header>
-              <div className='rounded-lg relative w-[496px] min-h-[493px] bg-[#23B0E6]'>
+              <div className={`rounded-lg relative w-[496px] min-h-[493px] ${darkMode ? 'bg-[#1F2937]' : 'bg-[#23B0E6]'}`}>
                 {/* Pin base */}
                 <div
                   id="pinbase"
                   className='absolute left-[219px] w-[58px] h-[493px] bg-[#073642] top-0'
                 ></div>
 
-                {/* Bottom Pins (left side) */}
+                   {/* Left Pins - FIXED HOVER BEHAVIOR */}
                 <ul className='relative top-[7px] list-none block w-[248px] float-left p-0 m-0 bottom'>
                   {leftPins.map((pin) => (
                     <li
                       key={pin.number}
                       className={`pin${pin.number} ${pin.type}`}
-
                       onMouseEnter={() => handlePinHover(pin.number)}
                       onMouseLeave={handlePinLeave}
                     >
                       <a
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
                         className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px] 
-  ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
-  w-[248px] no-underline  ${leftPins ? 'rounded-r-[13px]' : 'rounded-l-[13px]'}
-  ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) ? 'bg-[#f5f3ed] text-black-500' : 'bg-transparent'}`}
-
+                          w-[248px] no-underline rounded-r-[13px] transition-all duration-200
+                          ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                            ? 'bg-[#f5f3ed] text-[#063541]' 
+                            : 'bg-transparent'
+                          }
+                          ${pin.type === 'gnd' && hoveredPin !== pin.number && !isPinOfSelectedBus(pin) 
+                            ? 'text-[rgba(233,229,210,0.7)]' 
+                            : hoveredPin === pin.number || isPinOfSelectedBus(pin) 
+                              ? 'text-[#063541]' 
+                              : 'text-[#E9E5D2]'
+                          }`}
                         title={pin.so_c ? `SoC pin ${pin.so_c}` : ''}
                       >
                         <span className='block'>
-                          <span className={`absolute right-[32px] text-right text-[1.1em] opacity-80
-              ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' : 'text-[#073642]'}`}>
+                          <span className={`absolute right-[32px] text-right text-[1.1em] opacity-80 transition-colors duration-200
+                            ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                              ? 'text-[#063541]' 
+                              : darkMode ? 'text-gray-300' : 'text-[#073642]'
+                            }`}>
                             {pin.number}
                           </span>
-                          <span className={`inline-block pl-[10px]
-              ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' :
-                              (pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]')}`}>
+                          <span className={`inline-block pl-[10px] transition-colors duration-200
+                            ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                              ? 'text-[#063541]' 
+                              : pin.type === 'gnd' 
+                                ? 'text-[rgba(233,229,210,0.7)]' 
+                                : 'text-[#E9E5D2]'
+                            }`}>
                             {pin.name}
-                            {mode && mode in pin ? (<>
-                              <small className={`text-[1em] ml-[4px] 
-                  ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' :
-                                  (pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]')}`}>
+                            {mode && mode in pin ? (
+                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                                ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                                  ? 'text-[#063541]' 
+                                  : pin.type === 'gnd' 
+                                    ? 'text-[rgba(233,229,210,0.5)]' 
+                                    : 'text-[#E9E5D2]'
+                                }`}>
                                 ({pin[mode as keyof Pin]})
                               </small>
-                            </>) : pin.altFunction ? (
-                              <small className={`text-[1em] ml-[4px] 
-                  ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' :
-                                  (pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]')}`}>
+                            ) : pin.altFunction ? (
+                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                                ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                                  ? 'text-[#063541]' 
+                                  : pin.type === 'gnd' 
+                                    ? 'text-[rgba(233,229,210,0.5)]' 
+                                    : 'text-[#E9E5D2]'
+                                }`}>
                                 ({pin.altFunction})
                               </small>
                             ) : null}
                           </span>
                           <span
                             className={`block border border-transparent rounded-full w-[16px] h-[16px] absolute right-[4px] top-[2px] 
-                ${getPinColor(pin.type)}`}
+                              ${getPinColor(pin.type)}`}
                           >
                             <span className='block rounded-full bg-[#FDF6E3] absolute left-[5px] top-[5px] w-[6px] h-[6px]'></span>
                           </span>
@@ -901,7 +885,7 @@ const BeagleYAIWithSearchParams = () => {
                   ))}
                 </ul>
 
-                {/* Top Pins (right side) */}
+                {/* Right Pins */}
                 <ul className='relative top-[7px] list-none block w-[248px] float-right p-0 m-0 indent-[56px] top'>
                   {rightPins.map((pin) => (
                     <li
@@ -913,38 +897,60 @@ const BeagleYAIWithSearchParams = () => {
                       <a
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
                         className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px]  
-  ${pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]'} 
-  w-[248px] no-underline  rounded-l-[13px]
-  ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) ? 'bg-[#f5f3ed] text-black-500' : 'bg-transparent'}`}
-
+                          w-[248px] no-underline rounded-l-[13px] transition-all duration-200
+                          ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                            ? 'bg-[#f5f3ed] text-[#063541]' 
+                            : 'bg-transparent'
+                          }
+                          ${pin.type === 'gnd' && hoveredPin !== pin.number && !isPinOfSelectedBus(pin) 
+                            ? 'text-[rgba(233,229,210,0.7)]' 
+                            : hoveredPin === pin.number || isPinOfSelectedBus(pin) 
+                              ? 'text-[#063541]' 
+                              : 'text-[#E9E5D2]'
+                          }`}
                         title={pin.socPin ? `SoC pin ${pin.socPin}` : ''}
                       >
                         <span className='block'>
-                          <span className={`absolute left-[32px] indent-0 text-[1.1em] opacity-80
-              ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' : 'text-[#073642]'}`}>
+                          <span className={`absolute left-[32px] indent-0 text-[1.1em] opacity-80 transition-colors duration-200
+                            ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                              ? 'text-[#063541]' 
+                              : darkMode ? 'text-gray-300' : 'text-[#073642]'
+                            }`}>
                             {pin.number}
                           </span>
-                          <span className={`block left-[2px] 
-              ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' :
-                              (pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]')}`}>
+                          <span className={`block left-[2px] transition-colors duration-200
+                            ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                              ? 'text-[#063541]' 
+                              : pin.type === 'gnd' 
+                                ? 'text-[rgba(233,229,210,0.7)]' 
+                                : 'text-[#E9E5D2]'
+                            }`}>
                             {pin.name}
-                            {mode && mode in pin ? (<>
-                              <small className={`text-[1em] ml-[4px] 
-                  ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' :
-                                  (pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]')}`}>
+                            {mode && mode in pin ? (
+                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                                ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                                  ? 'text-[#063541]' 
+                                  : pin.type === 'gnd' 
+                                    ? 'text-[rgba(233,229,210,0.5)]' 
+                                    : 'text-[#E9E5D2]'
+                                }`}>
                                 ({pin[mode as keyof Pin]})
                               </small>
-                            </>) : pin.altFunction ? (
-                              <small className={`text-[1em] ml-[4px] 
-                  ${hoveredPin === pin.number || isPinOfSelectedBus(pin) ? 'text-[#063541]' :
-                                  (pin.type === 'gnd' ? 'text-[rgba(233,229,210,0.5)]' : 'text-[#E9E5D2]')}`}>
+                            ) : pin.altFunction ? (
+                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                                ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
+                                  ? 'text-[#063541]' 
+                                  : pin.type === 'gnd' 
+                                    ? 'text-[rgba(233,229,210,0.5)]' 
+                                    : 'text-[#E9E5D2]'
+                                }`}>
                                 ({pin.altFunction})
                               </small>
                             ) : null}
                           </span>
                           <span
                             className={`block border border-transparent rounded-full w-[16px] h-[16px] absolute left-[4px] top-[2px] 
-                ${getPinColor(pin.type)}`}
+                              ${getPinColor(pin.type)}`}
                           >
                             <span className='block rounded-full bg-[#FDF6E3] absolute left-[5px] top-[5px] w-[6px] h-[6px]'></span>
                           </span>
@@ -953,69 +959,68 @@ const BeagleYAIWithSearchParams = () => {
                     </li>
                   ))}
                 </ul>
-
                 <div className='clear-both'></div>
               </div>
             </div>
             {/* Legend */}
-            <div className="bg-gray-100 p-4 rounded-lg" style={{ width: '496px', margin: '0 auto' }}>
+            <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} p-4 rounded-lg`} style={{ width: '496px', margin: '0 auto' }}>
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="md:w-2/3">
-                  <h2 className="text-xl font-bold mb-2">Legend</h2>
-                  <p className="text-sm mb-4">Orientate your BeagleY-AI with the GPIO on the right and the HDMI port(s) on the left.</p>
+                  <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Legend</h2>
+                  <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Orientate your BeagleY-AI with the GPIO on the right and the HDMI port(s) on the left.</p>
 
                   <ul className="space-y-2">
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-green-600 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>GPIO (General Purpose IO)</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>GPIO (General Purpose IO)</span>
                     </li>
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-pink-600 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>SPI (Serial Peripheral Interface)</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>SPI (Serial Peripheral Interface)</span>
                     </li>
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-blue-600 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>I²C (Inter-integrated Circuit)</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>I²C (Inter-integrated Circuit)</span>
                     </li>
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-indigo-600 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>UART (Universal Asynchronous Receiver/Transmitter)</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>UART (Universal Asynchronous Receiver/Transmitter)</span>
                     </li>
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-teal-600 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>PCM (Pulse Code Modulation)</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>PCM (Pulse Code Modulation)</span>
                     </li>
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-gray-800 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>Ground</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>Ground</span>
                     </li>
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-red-600 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>5v (Power)</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>5v (Power)</span>
                     </li>
                     <li className="flex items-center">
                       <span className="w-4 h-4 rounded-full bg-yellow-600 flex items-center justify-center mr-2">
                         <span className="w-2 h-2 rounded-full bg-white"></span>
                       </span>
-                      <span>3.3v (Power)</span>
+                      <span className={darkMode ? 'text-white' : 'text-black'}>3.3v (Power)</span>
                     </li>
                   </ul>
 
-                  <p className="text-sm mt-4"><b>(*)</b> Denotes pins that differ in functionality on BeagleY-AI as compared to Raspberry Pi 4/5</p>
+                  <p className={`text-sm mt-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}><b>(*)</b> Denotes pins that differ in functionality on BeagleY-AI as compared to Raspberry Pi 4/5</p>
                 </div>
 
                 <div className="md:w-1/3 flex justify-center" style={{ width: '196px', height: '297px' }}>
@@ -1028,7 +1033,7 @@ const BeagleYAIWithSearchParams = () => {
           {/* Right Column */}
           <div className="w-full lg:w-1/2">
             {/* Interfaces */}
-            <div className="bg-indigo-700 p-2 rounded-lg mb-2">
+            <div className="[bg-[#1F2937] p-2 rounded-lg mb-2">
               <ul className="flex flex-wrap gap-1 justify-end">
                 {['GPCLK*', 'MCU', 'GPIO', 'JTAG*', 'Ground', 'PWM', 'SDIO*', 'PCM', '1-WIRE', 'I2C', 'DPI*', 'UART', '3v3 Power', '5v Power', 'SPI', 'SoC Pin'].map((item) => (
                   <li key={item}>
@@ -1040,7 +1045,7 @@ const BeagleYAIWithSearchParams = () => {
                 ))}
               </ul>
             </div>
-            <div className="bg-gray-100 p-6 rounded-lg min-h-[1000px]">
+            <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} p-6 rounded-lg min-h-[1000px]`}>
 
               {mode === 'Pin Details' && selectedPin ? (
                 <PinDetails pin={selectedPin} />
@@ -1048,14 +1053,14 @@ const BeagleYAIWithSearchParams = () => {
                 (() => {
                   const busContent = {
                     "GPCLK*": (
-                      <article className="page_gpclk">
+                      <article className={`page_gpclk ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-[2rem] font-bold">GPCLK - General Purpose Clock*</h1>
                         <p>General Purpose Clock pins can be set up to output a fixed frequency without any ongoing software control.</p>
                         <p><strong>(*) - GPCLK is not available on the 40 Pin Header on BeagleY-AI. CLK Outputs are only available from test pads and/or PCIe/CSI Headers</strong></p>
                       </article>
                     ),
                     "MCU": (
-                      <article className="page_mcu px-4 py-6 text-black">
+                      <article className={`page_mcu px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">MCU - R5 Microcontroller Subsystem Pins</h1>
 
                         <p className="mb-2">
@@ -1081,11 +1086,11 @@ const BeagleYAIWithSearchParams = () => {
                       </article>
                     ),
                     "GPIO": (
-                      <article className="page_gpio px-4 py-6 text-black">
+                      <article className={`page_gpio px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">GPIO Pins</h1>
 
                         <p className="mb-2">
-                          GPIO stands for General-Purpose Input/Output. It’s a set of programmable pins that you can use to connect and control various electronic components.
+                          GPIO stands for General-Purpose Input/Output. It's a set of programmable pins that you can use to connect and control various electronic components.
                         </p>
 
                         <p className="mb-6">
@@ -1102,7 +1107,7 @@ const BeagleYAIWithSearchParams = () => {
                                 href="https://docs.beagleboard.org/latest/boards/beagley/ai/demos/beagley-ai-using-gpio.html"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 underline hover:text-blue-800"
+                                className="text-blue-400 underline hover:text-blue-600"
                               >
                                 More Information
                               </a>
@@ -1112,7 +1117,7 @@ const BeagleYAIWithSearchParams = () => {
                       </article>
                     ),
                     "I2C": (
-                      <article className="page_i2c px-4 py-6 text-black">
+                      <article className={`page_i2c px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">I2C - Inter Integrated Circuit</h1>
 
                         <p className="mb-2">
@@ -1131,7 +1136,7 @@ const BeagleYAIWithSearchParams = () => {
                           You can verify the address of connected I2C peripherals with a simple one-liner:
                         </p>
 
-                        <pre className="bg-gray-100 p-4 rounded mb-4 text-sm overflow-x-auto">
+                        <pre className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} p-4 rounded mb-4 text-sm overflow-x-auto`}>
                           <code className="language-bash block whitespace-pre">
                             {`sudo apt-get install i2c-tools
 sudo i2cdetect -y 1`}
@@ -1142,8 +1147,8 @@ sudo i2cdetect -y 1`}
                           You can then access I2C from Python using the smbus library:
                         </p>
 
-                        <pre className="bg-gray-100 p-4 rounded mb-6 text-sm overflow-x-auto">
-                          <code className="block whitespace-pre text-black">
+                        <pre className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} p-4 rounded mb-6 text-sm overflow-x-auto`}>
+                          <code className="block whitespace-pre">
                             import smbus
                             {"\n"}DEVICE_BUS = 1
                             {"\n"}DEVICE_ADDR = 0x15
@@ -1167,7 +1172,7 @@ sudo i2cdetect -y 1`}
                                 href="http://www.raspberry-projects.com/pi/programming-in-python/i2c-programming-in-python/using-the-i2c-interface-2"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 underline hover:text-blue-800"
+                                className="text-blue-400 underline hover:text-blue-600"
                               >
                                 More Information
                               </a>
@@ -1178,9 +1183,9 @@ sudo i2cdetect -y 1`}
 
                     ),
                     "SPI": (
-                      <article className="page_spi px-4 py-6 text-black">
+                      <article className={`page_spi px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">SPI - Serial Peripheral Interface</h1>
-                        <hr className="mb-4 border-gray-400" />
+                        <hr className={`mb-4 ${darkMode ? 'border-gray-600' : 'border-gray-400'}`} />
 
                         <p className="mb-2">
                           Known as the four-wire serial bus, SPI lets you attach multiple compatible devices to a single set of pins
@@ -1202,9 +1207,9 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "UART": (
-                      <article className="page_uart px-4 py-6 text-black">
+                      <article className={`page_uart px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">UART - Universal Asynchronous Receiver/Transmitter</h1>
-                        <hr className="mb-4 border-gray-400" />
+                        <hr className={`mb-4 ${darkMode ? 'border-gray-600' : 'border-gray-400'}`} />
 
                         <p className="mb-2">
                           UART is an asynchronous serial communication protocol, meaning that it takes bytes of data and
@@ -1239,7 +1244,7 @@ sudo i2cdetect -y 1`}
 
                     ),
                     "PCM": (
-                      <article className="page_pcm px-4 py-6 text-black">
+                      <article className={`page_pcm px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">PCM - Pulse-code Modulation</h1>
 
                         <p className="mb-2">
@@ -1263,7 +1268,7 @@ sudo i2cdetect -y 1`}
                         </div>
                       </article>
                     ),
-                    "DPI*": (<article className="page_dpi px-4 py-6 text-black">
+                    "DPI*": (<article className={`page_dpi px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                       <h1 className="text-2xl font-bold mb-4">DPI - Display Parallel Interface</h1>
                       <p className="mb-2">
                         The DPI Interface on BeagleY-AI is used by the RGB to HDMI framer.
@@ -1274,7 +1279,7 @@ sudo i2cdetect -y 1`}
                     </article>
                     ),
                     "1-WIRE": (
-                      <article className="page_1_wire px-4 py-6 text-black">
+                      <article className={`page_1_wire px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">W1-GPIO - One-Wire Interface</h1>
                         <p className="mb-6">
                           One-wire is a single-wire communication bus typically used to connect sensors.
@@ -1288,7 +1293,7 @@ sudo i2cdetect -y 1`}
                                 href="https://www.kernel.org/doc/Documentation/w1/w1.generic"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 underline hover:text-blue-800"
+                                className="text-blue-400 underline hover:text-blue-600"
                               >
                                 More Information
                               </a>
@@ -1298,7 +1303,7 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "SDIO*": (
-                      <article className="page_sdio px-4 py-6 text-black">
+                      <article className={`page_sdio px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">SDIO - SD Card Interface (*)</h1>
                         <p className="mb-2">
                           SDIO is the SD host/eMMC interface on the BeagleY-AI. SD host signals are normally used for the microSD slot.
@@ -1309,7 +1314,7 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "PWM": (
-                      <article className="page_pwm px-4 py-6 ">
+                      <article className={`page_pwm px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">PWM - Pulse-width Modulation</h1>
                         <p className="mb-2">
                           PWM (Pulse-width Modulation) is a method of creating an analog voltage
@@ -1320,41 +1325,41 @@ sudo i2cdetect -y 1`}
                         </p>
 
                         <div className="overflow-auto">
-                          <table className="table-auto border border-black mx-auto text-sm mb-6">
+                          <table className={`table-auto border ${darkMode ? 'border-gray-600' : 'border-black'} mx-auto text-sm mb-6`}>
                             <thead>
                               <tr>
-                                <th className="border border-black px-6 py-2" />
-                                <th className="border border-black px-6 py-2" colSpan={2}>
+                                <th className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`} />
+                                <th className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`} colSpan={2}>
                                   <b>PWM0</b>
                                 </th>
-                                <th className="border border-black px-6 py-2" colSpan={2}>
+                                <th className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`} colSpan={2}>
                                   <b>PWM1</b>
                                 </th>
-                                <th className="border border-black px-6 py-2" colSpan={3}>
+                                <th className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`} colSpan={3}>
                                   <b>ECAP</b>
                                 </th>
                               </tr>
                               <tr>
-                                <td className="border border-black px-6 py-2" />
-                                <td className="border border-black px-6 py-2">
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`} />
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`}>
                                   <b>A</b>
                                 </td>
-                                <td className="border border-black px-6 py-2">
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`}>
                                   <b>B</b>
                                 </td>
-                                <td className="border border-black px-6 py-2">
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`}>
                                   <b>A</b>
                                 </td>
-                                <td className="border border-black px-6 py-2">
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`}>
                                   <b>B</b>
                                 </td>
-                                <td className="border border-black px-6 py-2">
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`}>
                                   <b>0</b>
                                 </td>
-                                <td className="border border-black px-6 py-2">
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`}>
                                   <b>1</b>
                                 </td>
-                                <td className="border border-black px-6 py-2">
+                                <td className={`border ${darkMode ? 'border-gray-600' : 'border-black'} px-6 py-2`}>
                                   <b>2</b>
                                 </td>
                               </tr>
@@ -1377,7 +1382,7 @@ sudo i2cdetect -y 1`}
                                   {row.map((cell, j) => (
                                     <td
                                       key={j}
-                                      className="border border-black text-center px-6 py-1"
+                                      className={`border ${darkMode ? 'border-gray-600' : 'border-black'} text-center px-6 py-1`}
                                     >
                                       {cell}
                                     </td>
@@ -1397,7 +1402,7 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "JTAG*": (
-                      <article className="page_jtag px-4 py-6 text-black">
+                      <article className={`page_jtag px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">JTAG - Joint Test Action Group</h1>
 
                         <p className="mb-2">
@@ -1414,7 +1419,7 @@ sudo i2cdetect -y 1`}
                             href="https://www.printables.com/model/879533-beagley-ai-tagconnect-clip-10pin"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 underline hover:text-blue-800"
+                            className="text-blue-400 underline hover:text-blue-600"
                           >
                             available on Printables
                           </a>.
@@ -1422,7 +1427,7 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "Ground": (
-                      <article className="page_ground px-4 py-6 text-black">
+                      <article className={`page_ground px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">Ground</h1>
 
                         <p className="mb-2">
@@ -1442,7 +1447,7 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "3v3 Power": (
-                      <article className="page_3v3_power px-4 py-6 text-black">
+                      <article className={`page_3v3_power px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">3v3 Power</h1>
 
                         <p className="mb-2">
@@ -1459,7 +1464,7 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "5v Power": (
-                      <article className="page_5v_power px-4 py-6 text-black">
+                      <article className={`page_5v_power px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">5v Power</h1>
 
                         <p className="mb-2">
@@ -1473,7 +1478,7 @@ sudo i2cdetect -y 1`}
                       </article>
                     ),
                     "SoC Pin": (
-                      <article className="page_soc_pin px-4 py-6 text-black">
+                      <article className={`page_soc_pin px-4 py-6 ${darkMode ? 'text-white' : 'text-black'}`}>
                         <h1 className="text-2xl font-bold mb-4">SoC Pins</h1>
 
                         <p className="mb-2">
@@ -1497,7 +1502,7 @@ sudo i2cdetect -y 1`}
                                 href="https://www.ti.com/lit/ds/symlink/am67a.pdf"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 underline hover:text-blue-800"
+                                className="text-blue-400 underline hover:text-blue-600"
                               >
                                 More Information
                               </a>
@@ -1530,10 +1535,10 @@ sudo i2cdetect -y 1`}
           </div>
         </div>
 
-        <footer className="mt-8 text-center py-4">
+        <footer className={`mt-8 text-center py-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           <p>
             Spotted an error, want to add your board's pinout?{' '}
-            <a href="https://openbeagle.org/pinout/pinout.beagleboard.io" className="text-blue-600 hover:underline">
+            <a href="https://github.com/beagleboard/pinouts" className="text-blue-400 hover:underline">
               Contribute at OpenBeagle
             </a>
           </p>
