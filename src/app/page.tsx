@@ -569,18 +569,18 @@ const BeagleYAIWithSearchParams = () => {
     };
 
     return (
-      <article className={`p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md rounded-lg`}>
-        <h1 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'} mb-4`}>{data.title}</h1>
+      <article className={`p-8 ${darkMode ? 'glass-dark' : 'glass'} shadow-2xl rounded-2xl card-3d`}>
+        <h1 className={`text-3xl font-bold ${darkMode ? 'neon-text' : 'text-gray-800'} mb-6`}>{data.title}</h1>
 
         {data.functions.length > 0 && (
           <div className="mb-4">
             <div className="flex flex-wrap gap-2 mb-2">
               {data.functions.map((func) => (
-                <div key={func.name} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} p-2 rounded`}>
-                  <span className={`font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>{func.name}:</span>
-                  <div className="flex flex-wrap gap-1 mt-1">
+                <div key={func.name} className={`${darkMode ? 'glass-dark' : 'glass'} p-4 rounded-xl card-3d`}>
+                  <span className={`font-semibold ${darkMode ? 'text-white' : 'text-black'} text-lg`}>{func.name}:</span>
+                  <div className="flex flex-wrap gap-2 mt-3">
                     {func.values.map((value, i) => (
-                      <span key={i} className={`${darkMode ? 'bg-gray-600 text-white' : 'bg-gray-200'} px-2 py-1 rounded text-sm`}>
+                      <span key={i} className={`${darkMode ? 'bg-gradient-to-r from-cyan-500 to-blue-600' : 'bg-gradient-to-r from-blue-400 to-cyan-500'} text-white px-3 py-2 rounded-lg text-sm font-medium shadow-lg hover:scale-105 transition-transform`}>
                         {value}
                       </span>
                     ))}
@@ -705,23 +705,23 @@ const BeagleYAIWithSearchParams = () => {
   const ArticleContent = () => {
     return (
       <article>
-        <h1 className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>Pinout!</h1>
-        <h3 className={`text-xl mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>The BeagleY-AI GPIO pinout guide.</h3>
+        <h1 className={`text-4xl font-bold mb-6 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>Pinout!</h1>
+        <h3 className={`text-2xl mb-8 ${darkMode ? 'text-gray-300' : 'text-gray-700'} font-medium`}>The BeagleY-AI GPIO pinout guide.</h3>
 
         <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           This GPIO Pinout is an interactive reference to the BeagleY-AI GPIO pins, and a guide to the BeagleY-AI's GPIO interfaces.
-          Pinout also includes <a href="/boards" className="text-blue-400 hover:underline">hundreds of pinouts for BeagleY-AI add-on boards, HATs and pHATs</a>.
+          Pinout also includes <a href="/boards" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">hundreds of pinouts for BeagleY-AI add-on boards, HATs and pHATs</a>.
         </p>
 
-        <h2 className={`text-2xl font-bold mt-6 mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Support Pinout.xyz</h2>
+        <h2 className={`text-3xl font-bold mt-8 mb-4 ${darkMode ? 'text-gray-100' : 'text-gray-800'} border-l-4 ${darkMode ? 'border-gray-400' : 'border-gray-600'} pl-4`}>Support Pinout.xyz</h2>
         <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>If you love Pinout, please help me fund new features and improvements:</p>
         <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-          <li className="mb-1">via GitHub at <a href="https://github.com/sponsors/gadgetoid" className="text-blue-400 hover:underline">GitHub.com/sponsors/gadgetoid</a></li>
-          <li className="mb-1">via Patreon at <a href="https://www.patreon.com/gadgetoid" className="text-blue-400 hover:underline">Patreon.com/gadgetoid</a></li>
+          <li className="mb-2">via GitHub at <a href="https://github.com/sponsors/gadgetoid" className="text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors">GitHub.com/sponsors/gadgetoid</a></li>
+          <li className="mb-2">via Patreon at <a href="https://www.patreon.com/gadgetoid" className="text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors">Patreon.com/gadgetoid</a></li>
         </ul>
         <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Every $1 makes all the difference! Thank you.</p>
 
-        <h2 className={`text-2xl font-bold mt-6 mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>What do these numbers mean?</h2>
+        <h2 className={`text-3xl font-bold mt-8 mb-4 ${darkMode ? 'text-gray-100' : 'text-gray-800'} border-l-4 ${darkMode ? 'border-gray-400' : 'border-gray-600'} pl-4`}>What do these numbers mean?</h2>
         <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           <li className="mb-1">
             <strong>GPIO</strong> - General Purpose Input/Output, aka "BCM" or "Broadcom". These are the big numbers, e.g. "GPIO 22".
@@ -746,31 +746,43 @@ const BeagleYAIWithSearchParams = () => {
         <h2 className={`text-2xl font-bold mt-6 mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>More Resources</h2>
         <p className={`font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>For Support:</p>
         <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-          <li className="mb-1"><a href="https://docs.beagleboard.org/latest/boards/beagley/ai/index.html" className="text-blue-400 hover:underline">docs.BeagleBoard.org</a></li>
-          <li className="mb-1"><a href="https://forum.beagleboard.org" className="text-blue-400 hover:underline">The BeagleBoard Forum</a></li>
-          <li className="mb-1"><a href="https://beagleboard.org/discord" className="text-blue-400 hover:underline">Discord</a></li>
+                     <li className="mb-1"><a href="https://docs.beagleboard.org/latest/boards/beagley/ai/index.html" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">docs.BeagleBoard.org</a></li>
+           <li className="mb-1"><a href="https://forum.beagleboard.org" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">The BeagleBoard Forum</a></li>
+           <li className="mb-1"><a href="https://beagleboard.org/discord" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">Discord</a></li>
         </ul>
 
         <p className={`font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Software &amp; Design Files:</p>
         <ul className={`list-disc pl-5 mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-          <li className="mb-1"><a href="https://www.beagleboard.org/distros" className="text-blue-400 hover:underline">Software Images</a></li>
-          <li className="mb-1"><a href="https://rcn-ee.net/rootfs/" className="text-blue-400 hover:underline">Software Images (nightly/experimental)</a></li>
-          <li className="mb-1"><a href="https://openbeagle.org/beagley-ai/beagley-ai/" className="text-blue-400 hover:underline">Design Files</a></li>
+                     <li className="mb-1"><a href="https://www.beagleboard.org/distros" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">Software Images</a></li>
+           <li className="mb-1"><a href="https://rcn-ee.net/rootfs/" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">Software Images (nightly/experimental)</a></li>
+           <li className="mb-1"><a href="https://openbeagle.org/beagley-ai/beagley-ai/" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">Design Files</a></li>
         </ul>
 
         <p className={`font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Processor Documentation (AM67A):</p>
         <ul className={`list-disc pl-5 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-          <li className="mb-1"><a href="https://www.ti.com/lit/gpn/am67a" className="text-blue-400 hover:underline">Datasheet</a></li>
-          <li className="mb-1"><a href="https://www.ti.com/lit/zip/sprujb3" className="text-blue-400 hover:underline">Technical Reference Manual</a></li>
+                     <li className="mb-1"><a href="https://www.ti.com/lit/gpn/am67a" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">Datasheet</a></li>
+           <li className="mb-1"><a href="https://www.ti.com/lit/zip/sprujb3" className="text-blue-600 hover:text-blue-800 hover:underline font-medium">Technical Reference Manual</a></li>
         </ul>
       </article>
     );
   };
   return (
 
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'} items-center justify-center`}>
+    <div className={`min-h-screen ${darkMode ? 'gradient-bg-dark text-gray-100' : 'gradient-bg text-gray-900'} items-center justify-center relative overflow-hidden`}>
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, ${darkMode ? 'var(--neon-cyan)' : 'var(--neon-blue)'} 2px, transparent 2px)`,
+          backgroundSize: '50px 50px'
+        }}></div>
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-20 w-2 h-2 bg-cyan-400 rounded-full animate-pulse opacity-60"></div>
+        <div className="absolute top-40 right-32 w-3 h-3 bg-blue-400 rounded-full animate-pulse opacity-40"></div>
+        <div className="absolute bottom-40 left-32 w-2 h-2 bg-emerald-400 rounded-full animate-pulse opacity-50"></div>
+        <div className="absolute top-60 right-20 w-2 h-2 bg-cyan-400 rounded-full animate-pulse opacity-30"></div>
+      </div>
 
-      <div className="container items-center justify-center mx-auto ">
+      <div className="container items-center justify-center mx-auto relative z-10 pt-8">
 
 
         <div className="flex flex-col lg:flex-row gap-2  justify-center rounded-lg">
@@ -784,12 +796,17 @@ const BeagleYAIWithSearchParams = () => {
                 <link rel="icon" href="/favicon.ico" />
               </Head>
 
-              <header className="flex items-center p-4 ">
-                <img src={beagleLogo.src} alt="Beagle Logo" className="w-12 h-12" />
-                <h1 className="text-2xl font-bold">BeagleY-AI Pinout</h1>
+                             <header className={`flex items-center p-6 mb-6 mt-4 ${darkMode ? 'glass-dark' : 'glass'} rounded-2xl mx-4`}>
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <img src={beagleLogo.src} alt="Beagle Logo" className="w-14 h-14 float-animation" />
+                    <div className="absolute inset-0 w-14 h-14 bg-cyan-400/20 rounded-full blur-xl animate-pulse"></div>
+                  </div>
+                                     <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'} tracking-wide`}>BeagleY-AI Pinout</h1>
+                </div>
                 <button
                   onClick={toggleDarkMode}
-                  className={`ml-auto p-2 rounded-full  ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'} transition-colors`}
+                  className={`ml-auto p-3 rounded-full ${darkMode ? 'glass hover:bg-white/10' : 'glass hover:bg-black/10'} transition-all duration-300 hover:scale-110`}
                   aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
                 >
                   {darkMode ? (
@@ -803,28 +820,29 @@ const BeagleYAIWithSearchParams = () => {
                   )}
                 </button>
               </header>
-              <div className={`rounded-lg relative w-[496px] min-h-[493px] ${darkMode ? 'bg-[#1F2937]' : 'bg-[#23B0E6]'}`}>
+              <div className={`rounded-2xl relative w-[496px] min-h-[493px] ${darkMode ? 'glass-dark' : 'glass'} card-3d overflow-hidden`}>
                 {/* Pin base */}
                 <div
                   id="pinbase"
-                  className='absolute left-[219px] w-[58px] h-[493px] bg-[#073642] top-0'
+                  className='absolute left-[219px] w-[58px] h-[493px] bg-gradient-to-b from-gray-700 to-gray-900 top-0 shadow-2xl'
                 ></div>
 
                    {/* Left Pins - FIXED HOVER BEHAVIOR */}
-                <ul className='relative top-[7px] list-none block w-[248px] float-left p-0 m-0 bottom'>
-                  {leftPins.map((pin) => (
+                <ul className='relative list-none block w-[248px] float-left p-0 m-0'>
+                  {leftPins.map((pin, index) => (
                     <li
                       key={pin.number}
                       className={`pin${pin.number} ${pin.type}`}
+                      style={{ position: 'absolute', top: `${7 + (index * 24)}px` }}
                       onMouseEnter={() => handlePinHover(pin.number)}
                       onMouseLeave={handlePinLeave}
                     >
                       <a
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
-                        className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px] 
-                          w-[248px] no-underline rounded-r-[13px] transition-all duration-200
+                        className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] 
+                          w-[248px] no-underline rounded-r-[13px] transition-all duration-300
                           ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
-                            ? 'bg-[#f5f3ed] text-[#063541]' 
+                            ? 'bg-gradient-to-r from-cyan-50 to-blue-50 text-[#063541] shadow-lg' 
                             : 'bg-transparent'
                           }
                           ${pin.type === 'gnd' && hoveredPin !== pin.number && !isPinOfSelectedBus(pin) 
@@ -836,23 +854,23 @@ const BeagleYAIWithSearchParams = () => {
                         title={pin.so_c ? `SoC pin ${pin.so_c}` : ''}
                       >
                         <span className='block'>
-                          <span className={`absolute right-[32px] text-right text-[1.1em] opacity-80 transition-colors duration-200
+                          <span className={`absolute right-[32px] text-right text-[1.1em] opacity-80 transition-all duration-300 font-mono
                             ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
-                              ? 'text-[#063541]' 
+                              ? 'text-[#063541] scale-110' 
                               : darkMode ? 'text-gray-300' : 'text-[#073642]'
                             }`}>
                             {pin.number}
                           </span>
-                          <span className={`inline-block pl-[10px] transition-colors duration-200
+                          <span className={`inline-block pl-[10px] transition-all duration-300
                             ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
-                              ? 'text-[#063541]' 
+                              ? 'text-[#063541] scale-105' 
                               : pin.type === 'gnd' 
                                 ? 'text-[rgba(233,229,210,0.7)]' 
                                 : 'text-[#E9E5D2]'
                             }`}>
                             {pin.name}
                             {mode && mode in pin ? (
-                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                              <small className={`text-[1em] ml-[4px] transition-all duration-300
                                 ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
                                   ? 'text-[#063541]' 
                                   : pin.type === 'gnd' 
@@ -862,7 +880,7 @@ const BeagleYAIWithSearchParams = () => {
                                 ({pin[mode as keyof Pin]})
                               </small>
                             ) : pin.altFunction ? (
-                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                              <small className={`text-[1em] ml-[4px] transition-all duration-300
                                 ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
                                   ? 'text-[#063541]' 
                                   : pin.type === 'gnd' 
@@ -875,9 +893,9 @@ const BeagleYAIWithSearchParams = () => {
                           </span>
                           <span
                             className={`block border border-transparent rounded-full w-[16px] h-[16px] absolute right-[4px] top-[2px] 
-                              ${getPinColor(pin.type)}`}
+                              ${getPinColor(pin.type)} pin-3d shadow-lg`}
                           >
-                            <span className='block rounded-full bg-[#FDF6E3] absolute left-[5px] top-[5px] w-[6px] h-[6px]'></span>
+                            <span className='block rounded-full bg-[#FDF6E3] absolute left-[5px] top-[5px] w-[6px] h-[6px] shadow-inner'></span>
                           </span>
                         </span>
                       </a>
@@ -886,20 +904,21 @@ const BeagleYAIWithSearchParams = () => {
                 </ul>
 
                 {/* Right Pins */}
-                <ul className='relative top-[7px] list-none block w-[248px] float-right p-0 m-0 indent-[56px] top'>
-                  {rightPins.map((pin) => (
+                <ul className='relative list-none block w-[248px] float-right p-0 m-0'>
+                  {rightPins.map((pin, index) => (
                     <li
                       key={pin.number}
                       className={`pin${pin.number} ${pin.type}`}
+                      style={{ position: 'absolute', top: `${7 + (index * 24)}px` }}
                       onMouseEnter={() => handlePinHover(pin.number)}
                       onMouseLeave={handlePinLeave}
                     >
                       <a
                         onClick={() => { handlePinClick(pin.name, pin.number) }}
-                        className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] mb-[2px]  
-                          w-[248px] no-underline rounded-l-[13px] transition-all duration-200
+                        className={`block relative cursor-pointer text-[0.84em] leading-[22px] h-[22px] 
+                          w-[248px] no-underline rounded-l-[13px] transition-all duration-300
                           ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
-                            ? 'bg-[#f5f3ed] text-[#063541]' 
+                            ? 'bg-gradient-to-r from-cyan-50 to-blue-50 text-[#063541] shadow-lg' 
                             : 'bg-transparent'
                           }
                           ${pin.type === 'gnd' && hoveredPin !== pin.number && !isPinOfSelectedBus(pin) 
@@ -911,23 +930,23 @@ const BeagleYAIWithSearchParams = () => {
                         title={pin.socPin ? `SoC pin ${pin.socPin}` : ''}
                       >
                         <span className='block'>
-                          <span className={`absolute left-[32px] indent-0 text-[1.1em] opacity-80 transition-colors duration-200
+                           <span className={`absolute left-[32px] text-[1.1em] opacity-80 transition-all duration-300 font-mono
                             ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
-                              ? 'text-[#063541]' 
+                               ? 'text-[#063541] scale-110' 
                               : darkMode ? 'text-gray-300' : 'text-[#073642]'
                             }`}>
                             {pin.number}
                           </span>
-                          <span className={`block left-[2px] transition-colors duration-200
+                           <span className={`inline-block pl-[60px] transition-all duration-300
                             ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
-                              ? 'text-[#063541]' 
+                               ? 'text-[#063541] scale-105' 
                               : pin.type === 'gnd' 
                                 ? 'text-[rgba(233,229,210,0.7)]' 
                                 : 'text-[#E9E5D2]'
                             }`}>
                             {pin.name}
                             {mode && mode in pin ? (
-                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                              <small className={`text-[1em] ml-[4px] transition-all duration-300
                                 ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
                                   ? 'text-[#063541]' 
                                   : pin.type === 'gnd' 
@@ -937,7 +956,7 @@ const BeagleYAIWithSearchParams = () => {
                                 ({pin[mode as keyof Pin]})
                               </small>
                             ) : pin.altFunction ? (
-                              <small className={`text-[1em] ml-[4px] transition-colors duration-200
+                              <small className={`text-[1em] ml-[4px] transition-all duration-300
                                 ${(hoveredPin === pin.number || isPinOfSelectedBus(pin)) 
                                   ? 'text-[#063541]' 
                                   : pin.type === 'gnd' 
@@ -950,9 +969,9 @@ const BeagleYAIWithSearchParams = () => {
                           </span>
                           <span
                             className={`block border border-transparent rounded-full w-[16px] h-[16px] absolute left-[4px] top-[2px] 
-                              ${getPinColor(pin.type)}`}
+                              ${getPinColor(pin.type)} pin-3d shadow-lg`}
                           >
-                            <span className='block rounded-full bg-[#FDF6E3] absolute left-[5px] top-[5px] w-[6px] h-[6px]'></span>
+                            <span className='block rounded-full bg-[#FDF6E3] absolute left-[5px] top-[5px] w-[6px] h-[6px] shadow-inner'></span>
                           </span>
                         </span>
                       </a>
@@ -963,60 +982,60 @@ const BeagleYAIWithSearchParams = () => {
               </div>
             </div>
             {/* Legend */}
-            <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} p-4 rounded-lg`} style={{ width: '496px', margin: '0 auto' }}>
-              <div className="flex flex-col md:flex-row gap-4">
+            <div className={`${darkMode ? 'glass-dark' : 'glass'} p-6 rounded-2xl card-3d`} style={{ width: '496px', margin: '20px auto' }}>
+              <div className="flex flex-col md:flex-row gap-6">
                 <div className="md:w-2/3">
-                  <h2 className={`text-xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Legend</h2>
-                  <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Orientate your BeagleY-AI with the GPIO on the right and the HDMI port(s) on the left.</p>
+                                     <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Legend</h2>
+                  <p className={`text-sm mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed`}>Orientate your BeagleY-AI with the GPIO on the right and the HDMI port(s) on the left.</p>
 
-                  <ul className="space-y-2">
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-green-600 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                  <ul className="space-y-3">
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-green-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>GPIO (General Purpose IO)</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-green-400 transition-colors`}>GPIO (General Purpose IO)</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-pink-600 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-pink-600 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-pink-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>SPI (Serial Peripheral Interface)</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-pink-400 transition-colors`}>SPI (Serial Peripheral Interface)</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-blue-600 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-blue-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>I²C (Inter-integrated Circuit)</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-blue-400 transition-colors`}>I²C (Inter-integrated Circuit)</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-indigo-600 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-indigo-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>UART (Universal Asynchronous Receiver/Transmitter)</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-indigo-400 transition-colors`}>UART (Universal Asynchronous Receiver/Transmitter)</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-teal-600 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-teal-600 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-teal-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>PCM (Pulse Code Modulation)</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-teal-400 transition-colors`}>PCM (Pulse Code Modulation)</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-gray-800 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-gray-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>Ground</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-gray-400 transition-colors`}>Ground</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-red-600 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-red-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>5v (Power)</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-red-400 transition-colors`}>5v (Power)</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="w-4 h-4 rounded-full bg-yellow-600 flex items-center justify-center mr-2">
-                        <span className="w-2 h-2 rounded-full bg-white"></span>
+                    <li className="flex items-center group hover:scale-105 transition-transform duration-300">
+                      <span className="w-5 h-5 rounded-full bg-yellow-600 flex items-center justify-center mr-3 shadow-lg group-hover:shadow-yellow-400/50 transition-shadow">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white shadow-inner"></span>
                       </span>
-                      <span className={darkMode ? 'text-white' : 'text-black'}>3.3v (Power)</span>
+                                             <span className={`${darkMode ? 'text-gray-100' : 'text-gray-800'} font-medium group-hover:text-yellow-400 transition-colors`}>3.3v (Power)</span>
                     </li>
                   </ul>
 
@@ -1033,19 +1052,23 @@ const BeagleYAIWithSearchParams = () => {
           {/* Right Column */}
           <div className="w-full lg:w-1/2">
             {/* Interfaces */}
-            <div className="[bg-[#1F2937] p-2 rounded-lg mb-2">
-              <ul className="flex flex-wrap gap-1 justify-end">
+            <div className={`${darkMode ? 'glass-dark' : 'glass'} p-4 rounded-2xl mb-4 card-3d`}>
+              <ul className="flex flex-wrap gap-2 justify-end">
                 {['GPCLK*', 'MCU', 'GPIO', 'JTAG*', 'Ground', 'PWM', 'SDIO*', 'PCM', '1-WIRE', 'I2C', 'DPI*', 'UART', '3v3 Power', '5v Power', 'SPI', 'SoC Pin'].map((item) => (
                   <li key={item}>
                     <a onClick={() => handleBusSelect(item)}
-                      className={`inline-block px-3 py-1 cursor-pointer text-xs ${mode === item ? 'bg-indigo-200 text-indigo-700' : 'bg-indigo-600 text-white'} rounded hover:bg-indigo-200 hover:text-indigo-700 transition-colors`}>
+                                                                    className={`interface-btn inline-block px-4 py-2 cursor-pointer text-sm font-medium rounded-xl ${
+                          mode === item 
+                            ? `${darkMode ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-900' : 'bg-gradient-to-r from-gray-700 to-gray-800 text-white'} shadow-lg ${darkMode ? 'shadow-gray-300/25' : 'shadow-gray-700/25'}` 
+                            : `${darkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-black/10 hover:bg-black/20'} ${darkMode ? 'text-gray-200 hover:text-white' : 'text-gray-700 hover:text-gray-900'}`
+                        }`}>
                       {item}
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} p-6 rounded-lg min-h-[1000px]`}>
+            <div className={`${darkMode ? 'glass-dark' : 'glass'} p-8 rounded-2xl min-h-[1000px] card-3d`}>
 
               {mode === 'Pin Details' && selectedPin ? (
                 <PinDetails pin={selectedPin} />
@@ -1535,13 +1558,18 @@ sudo i2cdetect -y 1`}
           </div>
         </div>
 
-        <footer className={`mt-8 text-center py-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-          <p>
-            Spotted an error, want to add your board's pinout?{' '}
-            <a href="https://github.com/beagleboard/pinouts" className="text-blue-400 hover:underline">
+        <footer className={`mt-12 text-center py-8 ${darkMode ? 'glass-dark' : 'glass'} rounded-2xl mx-4`}>
+          <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+            Spotted an error, want to add your board's pinout?
+          </p>
+          <a 
+            href="https://github.com/beagleboard/pinouts" 
+            className="btn-modern inline-block"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
               Contribute at OpenBeagle
             </a>
-          </p>
         </footer>
       </div>
     </div >
